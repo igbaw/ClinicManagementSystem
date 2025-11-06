@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/client";
-import ClinicCalendar from "./ClinicCalendarOptimized";
+import ClinicCalendar from "./ClinicCalendar";
 import Link from "next/link";
+import VitalSignsModal, { VitalSigns } from "../modals/VitalSignsModal";
 
 interface Appointment {
   id: string;
@@ -36,10 +37,13 @@ export default function AppointmentCalendar({
   doctorId, 
   onAppointmentSelect 
 }: AppointmentCalendarProps) {
-  const supabase = useMemo(() => createClient(), []);
+  // Use lazy initializer to create supabase client only once
+  const [supabase] = useState(() => createClient());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedDateAppointments, setSelectedDateAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showVitalSignsModal, setShowVitalSignsModal] = useState(false);
+  const [selectedAppointmentForCheckIn, setSelectedAppointmentForCheckIn] = useState<Appointment | null>(null);
 
   // Helper to safely access patient/doctor data
   const getPatient = (apt: Appointment) => Array.isArray(apt.patient) ? apt.patient[0] : apt.patient;
@@ -57,9 +61,10 @@ export default function AppointmentCalendar({
           id,
           appointment_date,
           appointment_time,
+          booking_code,
           status,
           patient:patients(full_name, medical_record_number),
-          doctor:users(full_name)
+          doctor:users!appointments_doctor_id_fkey(full_name)
         `)
         .eq("appointment_date", dateStr)
         .order("appointment_time");
@@ -68,35 +73,66 @@ export default function AppointmentCalendar({
         query = query.eq("doctor_id", doctorId);
       }
 
-      const { data } = await query;
-      setSelectedDateAppointments((data as unknown as Appointment[]) || []);
+      const { data, error } = await query;
+      
+      if (error) {
+        console.error("Error loading appointments:", error);
+        alert(`Gagal memuat janji temu: ${error.message}`);
+        setSelectedDateAppointments([]);
+      } else {
+        console.log("Loaded appointments:", data);
+        setSelectedDateAppointments((data as unknown as Appointment[]) || []);
+      }
     } catch (error) {
       console.error("Error loading appointments:", error);
+      setSelectedDateAppointments([]);
     } finally {
       setLoading(false);
     }
-  }, [doctorId, supabase]);
+  }, [doctorId]);
 
   const handleAppointmentClick = useCallback((appointment: Appointment) => {
     onAppointmentSelect?.(appointment);
   }, [onAppointmentSelect]);
 
-  const checkInAppointment = async (appointmentId: string, bookingCode: string) => {
+  const handleCheckInClick = (appointment: Appointment) => {
+    setSelectedAppointmentForCheckIn(appointment);
+    setShowVitalSignsModal(true);
+  };
+
+  const checkInAppointment = async (vitalSigns: VitalSigns) => {
+    if (!selectedAppointmentForCheckIn) return;
+
     try {
       const response = await fetch("/api/checkin/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_code: bookingCode }),
+        body: JSON.stringify({ 
+          booking_code: selectedAppointmentForCheckIn.booking_code,
+          vital_signs: {
+            bloodPressure: vitalSigns.bloodPressure,
+            pulse: vitalSigns.pulse ? parseInt(vitalSigns.pulse) : null,
+            temperature: vitalSigns.temperature ? parseFloat(vitalSigns.temperature) : null,
+            weight: vitalSigns.weight ? parseFloat(vitalSigns.weight) : null,
+            height: vitalSigns.height ? parseFloat(vitalSigns.height) : null,
+          },
+        }),
       });
 
       if (response.ok) {
+        setShowVitalSignsModal(false);
+        setSelectedAppointmentForCheckIn(null);
         // Refresh appointments for selected date
         if (selectedDate) {
           await handleDateSelect(selectedDate);
         }
+      } else {
+        const result = await response.json();
+        alert(result.message || "Gagal check-in");
       }
     } catch (error) {
       console.error("Check-in error:", error);
+      alert("Terjadi kesalahan saat check-in");
     }
   };
 
@@ -195,7 +231,7 @@ export default function AppointmentCalendar({
                     <div className="flex items-center gap-2">
                       {appointment.status === 'scheduled' && (
                         <button
-                          onClick={() => checkInAppointment(appointment.id, appointment.booking_code || '')}
+                          onClick={() => handleCheckInClick(appointment)}
                           className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
                         >
                           Check-in
@@ -223,6 +259,17 @@ export default function AppointmentCalendar({
           </div>
         </div>
       )}
+
+      {/* Vital Signs Modal */}
+      <VitalSignsModal
+        isOpen={showVitalSignsModal}
+        onClose={() => {
+          setShowVitalSignsModal(false);
+          setSelectedAppointmentForCheckIn(null);
+        }}
+        onSubmit={checkInAppointment}
+        patientName={selectedAppointmentForCheckIn ? getPatient(selectedAppointmentForCheckIn)?.full_name || '' : ''}
+      />
     </div>
   );
 }

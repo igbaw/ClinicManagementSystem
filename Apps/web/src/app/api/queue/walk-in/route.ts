@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const supabase = await createServerClient();
-    const { patient_id, doctor_id, chief_complaint, notes } = await request.json();
+    const { patient_id, doctor_id, chief_complaint, notes, vital_signs } = await request.json();
 
     // Validate required fields
     if (!patient_id || !doctor_id) {
@@ -78,6 +78,7 @@ export async function POST(request: Request) {
         status: 'waiting',
         chief_complaint,
         notes,
+        vital_signs,
         created_by: user.id,
       })
       .select()

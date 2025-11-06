@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const supabase = await createServerClient();
-    const { booking_code } = await request.json();
+    const { booking_code, vital_signs } = await request.json();
 
     // Validate booking code
     if (!booking_code) {
@@ -121,6 +121,7 @@ export async function POST(request: Request) {
         queue_number: queueNumber,
         queue_date: today,
         status: 'waiting',
+        vital_signs,
         created_by: user.id,
       })
       .select()

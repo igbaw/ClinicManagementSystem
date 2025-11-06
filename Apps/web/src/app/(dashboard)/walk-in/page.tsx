@@ -31,6 +31,13 @@ export default function WalkInCheckInPage() {
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [chiefComplaint, setChiefComplaint] = useState("");
   const [notes, setNotes] = useState("");
+  
+  // Vital signs
+  const [bloodPressure, setBloodPressure] = useState("");
+  const [pulse, setPulse] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -107,6 +114,13 @@ export default function WalkInCheckInPage() {
           doctor_id: selectedDoctor,
           chief_complaint: chiefComplaint,
           notes,
+          vital_signs: {
+            bloodPressure,
+            pulse: pulse ? parseInt(pulse) : null,
+            temperature: temperature ? parseFloat(temperature) : null,
+            weight: weight ? parseFloat(weight) : null,
+            height: height ? parseFloat(height) : null,
+          },
         }),
       });
 
@@ -130,6 +144,11 @@ export default function WalkInCheckInPage() {
         setSelectedDoctor("");
         setChiefComplaint("");
         setNotes("");
+        setBloodPressure("");
+        setPulse("");
+        setTemperature("");
+        setWeight("");
+        setHeight("");
         setSuccess(null);
       }, 3000);
     } catch (err: any) {
@@ -368,6 +387,76 @@ export default function WalkInCheckInPage() {
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
+
+                {/* Vital Signs */}
+                <div className="border-t pt-4 mt-4">
+                  <h4 className="text-md font-semibold mb-3 text-gray-900">Tanda Vital (Opsional)</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Tekanan Darah
+                      </label>
+                      <input
+                        type="text"
+                        value={bloodPressure}
+                        onChange={(e) => setBloodPressure(e.target.value)}
+                        placeholder="120/80"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Nadi (x/mnt)
+                      </label>
+                      <input
+                        type="number"
+                        value={pulse}
+                        onChange={(e) => setPulse(e.target.value)}
+                        placeholder="80"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Suhu (°C)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={temperature}
+                        onChange={(e) => setTemperature(e.target.value)}
+                        placeholder="36.5"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        BB (kg)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        placeholder="70"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        TB (cm)
+                      </label>
+                      <input
+                        type="number"
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
+                        placeholder="170"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">💡 Tanda vital akan otomatis tersedia untuk dokter saat pemeriksaan</p>
+                </div>
               </div>
             </div>
 
@@ -405,6 +494,11 @@ export default function WalkInCheckInPage() {
                     setSelectedDoctor("");
                     setChiefComplaint("");
                     setNotes("");
+                    setBloodPressure("");
+                    setPulse("");
+                    setTemperature("");
+                    setWeight("");
+                    setHeight("");
                   }}
                   className="flex-1 px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50"
                   disabled={submitting}

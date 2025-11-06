@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const createSchema = z.object({
   fullName: z.string(),
-  nik: z.string(),
+  nik: z.string().optional(),
   bpjsNumber: z.string().optional(),
   dateOfBirth: z.coerce.date(),
   gender: z.string(),
@@ -52,21 +52,23 @@ async function createPatient(formData: FormData) {
 
   const data = parsed.data;
 
-  // Check for duplicate NIK
-  const { data: existingPatient } = await supabase
-    .from("patients")
-    .select("id, full_name, medical_record_number")
-    .eq("nik", data.nik)
-    .single();
+  // Check for duplicate NIK only if NIK is provided
+  if (data.nik) {
+    const { data: existingPatient } = await supabase
+      .from("patients")
+      .select("id, full_name, medical_record_number")
+      .eq("nik", data.nik)
+      .single();
 
-  if (existingPatient) {
-    return { 
-      error: "NIK sudah terdaftar", 
-      duplicate: {
-        name: existingPatient.full_name,
-        mrNumber: existingPatient.medical_record_number
-      }
-    };
+    if (existingPatient) {
+      return { 
+        error: "NIK sudah terdaftar", 
+        duplicate: {
+          name: existingPatient.full_name,
+          mrNumber: existingPatient.medical_record_number
+        }
+      };
+    }
   }
 
   // Generate MR number

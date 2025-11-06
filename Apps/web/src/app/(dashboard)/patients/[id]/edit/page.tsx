@@ -173,14 +173,14 @@ export default function EditPatientPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                NIK *
+                NIK
               </label>
               <input
                 type="text"
                 name="nik"
-                defaultValue={patient.nik}
-                required
+                defaultValue={patient.nik || ""}
                 maxLength={16}
+                placeholder="16 digit angka (opsional)"
                 className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>

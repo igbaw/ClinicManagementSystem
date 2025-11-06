@@ -42,7 +42,7 @@ export default function PatientForm({ action, defaultValues }: PatientFormProps)
     setServerError(null);
     const fd = new FormData();
     fd.append("fullName", data.fullName);
-    fd.append("nik", data.nik);
+    if (data.nik) fd.append("nik", data.nik);
     if (data.bpjsNumber) fd.append("bpjsNumber", data.bpjsNumber);
     fd.append("dateOfBirth", data.dateOfBirth);
     fd.append("gender", data.gender);
@@ -126,10 +126,10 @@ export default function PatientForm({ action, defaultValues }: PatientFormProps)
           {errors.fullName && <p className="text-red-600 text-sm">{errors.fullName.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">NIK *</label>
-          <input className="input" maxLength={16} placeholder="16 digit angka" {...register('nik')} />
+          <label className="block text-sm font-medium text-gray-700">NIK</label>
+          <input className="input" maxLength={16} placeholder="16 digit angka (opsional)" {...register('nik')} />
           {errors.nik && <p className="text-red-600 text-sm">{errors.nik.message}</p>}
-          {!errors.nik && <p className="text-xs text-gray-500 mt-1">Format: 16 digit angka</p>}
+          {!errors.nik && <p className="text-xs text-gray-500 mt-1">Opsional - Format: 16 digit angka</p>}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">No. BPJS</label>

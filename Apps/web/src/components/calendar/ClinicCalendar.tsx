@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay, isToday, getDay, parseISO } from "date-fns";
 import { id } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/client";
@@ -48,11 +48,15 @@ export default function ClinicCalendar({
   selectedDoctor,
   initialDate = new Date()
 }: ClinicCalendarProps) {
-  const supabase = useMemo(() => createClient(), []);
+  // Use lazy initializer to create supabase client only once
+  const [supabase] = useState(() => createClient());
   const [currentMonth, setCurrentMonth] = useState(initialDate);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({});
   const [loading, setLoading] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
+  const fetchDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const spinnerTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [viewMode, setViewMode] = useState<"month" | "week">("month");
 
   // Generate calendar days
@@ -73,54 +77,78 @@ export default function ClinicCalendar({
     return days;
   }, [startDate, endDate]);
 
-  // Load appointments for the current month view
-  const loadAppointments = useCallback(async () => {
-    setLoading(true);
-    try {
-      const startDateStr = format(startDate, 'yyyy-MM-dd');
-      const endDateStr = format(endDate, 'yyyy-MM-dd');
-      
-      let query = supabase
-        .from("appointments")
-        .select(`
-          id,
-          appointment_date,
-          appointment_time,
-          status,
-          patient:patients(full_name, medical_record_number),
-          doctor:users(full_name)
-        `)
-        .gte("appointment_date", startDateStr)
-        .lte("appointment_date", endDateStr)
-        .order("appointment_time");
-
-      if (selectedDoctor) {
-        query = query.eq("doctor_id", selectedDoctor);
-      }
-
-      const { data } = await query;
-      
-      // Group appointments by date
-      const groupedAppointments: Record<string, Appointment[]> = {};
-      data?.forEach((apt: any) => {
-        const dateKey = apt.appointment_date;
-        if (!groupedAppointments[dateKey]) {
-          groupedAppointments[dateKey] = [];
-        }
-        groupedAppointments[dateKey].push(apt);
-      });
-
-      setAppointments(groupedAppointments);
-    } catch (error) {
-      console.error("Error loading appointments:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [startDate, endDate, selectedDoctor, supabase]);
-
+  // Load appointments for the current month view with debounce and spinner delay
   useEffect(() => {
-    void loadAppointments();
-  }, [loadAppointments]);
+    // Clear pending debounce
+    if (fetchDebounceRef.current) clearTimeout(fetchDebounceRef.current);
+    // Debounce fetch to avoid rapid re-queries when month/filters change
+    fetchDebounceRef.current = setTimeout(() => {
+      let cancelled = false;
+      const run = async () => {
+        setLoading(true);
+        // Only show spinner if loading takes >150ms to reduce flicker
+        spinnerTimerRef.current = setTimeout(() => {
+          if (!cancelled) setShowSpinner(true);
+        }, 150);
+
+        try {
+          const startDateStr = format(startDate, 'yyyy-MM-dd');
+          const endDateStr = format(endDate, 'yyyy-MM-dd');
+
+          let query = supabase
+            .from("appointments")
+            .select(`
+              id,
+              appointment_date,
+              appointment_time,
+              status,
+              patient:patients(full_name, medical_record_number),
+              doctor:users(full_name)
+            `)
+            .gte("appointment_date", startDateStr)
+            .lte("appointment_date", endDateStr)
+            .order("appointment_time");
+
+          if (selectedDoctor) {
+            query = query.eq("doctor_id", selectedDoctor);
+          }
+
+          const { data } = await query;
+
+          if (cancelled) return;
+
+          // Group appointments by date
+          const groupedAppointments: Record<string, Appointment[]> = {};
+          data?.forEach((apt: any) => {
+            const dateKey = apt.appointment_date;
+            if (!groupedAppointments[dateKey]) {
+              groupedAppointments[dateKey] = [];
+            }
+            groupedAppointments[dateKey].push(apt);
+          });
+
+          setAppointments(groupedAppointments);
+        } catch (error) {
+          if (!cancelled) console.error("Error loading appointments:", error);
+        } finally {
+          if (!cancelled) {
+            setLoading(false);
+            setShowSpinner(false);
+            if (spinnerTimerRef.current) clearTimeout(spinnerTimerRef.current);
+          }
+        }
+      };
+      void run();
+      return () => {
+        cancelled = true;
+      };
+    }, 100); // 100ms debounce
+
+    return () => {
+      if (fetchDebounceRef.current) clearTimeout(fetchDebounceRef.current);
+      if (spinnerTimerRef.current) clearTimeout(spinnerTimerRef.current);
+    };
+  }, [startDate, endDate, selectedDoctor, supabase]);
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
@@ -238,7 +266,7 @@ export default function ClinicCalendar({
 
       {/* Calendar Grid */}
       <div className="p-4">
-        {loading ? (
+        {showSpinner && loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="text-gray-500">Memuat jadwal...</div>
           </div>
@@ -259,9 +287,10 @@ export default function ClinicCalendar({
               const isCurrentDay = isToday(date);
               const dayAppointments = getAppointmentsForDate(date);
 
+              const dayKey = format(date, 'yyyy-MM-dd');
               return (
                 <div
-                  key={date.toString()}
+                  key={dayKey}
                   onClick={() => handleDateClick(date)}
                   className={`
                     bg-white p-2 min-h-[80px] cursor-pointer transition-colors

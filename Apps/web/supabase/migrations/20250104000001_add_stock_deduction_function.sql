@@ -68,6 +68,10 @@ CREATE TABLE IF NOT EXISTS stock_adjustments (
 -- Enable RLS for stock_adjustments
 ALTER TABLE stock_adjustments ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Authenticated users can view stock adjustments" ON stock_adjustments;
+DROP POLICY IF EXISTS "Admin and front desk can manage stock adjustments" ON stock_adjustments;
+
 -- Policy for stock_adjustments
 CREATE POLICY "Authenticated users can view stock adjustments" ON stock_adjustments
 FOR SELECT USING (auth.role() IN ('authenticated'));

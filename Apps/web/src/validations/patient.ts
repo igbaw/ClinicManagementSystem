@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const patientSchema = z.object({
   fullName: z.string().min(3, 'Nama minimal 3 karakter').max(100),
-  nik: z.string().length(16, 'NIK harus 16 digit').regex(/^\d+$/, 'NIK harus angka'),
+  nik: z.string().length(16, 'NIK harus 16 digit').regex(/^\d+$/, 'NIK harus angka').optional().or(z.literal('')),
   bpjsNumber: z.string().length(13, 'No. BPJS harus 13 digit').regex(/^\d+$/).optional().or(z.literal('')),
   dateOfBirth: z.string().min(1, 'Tanggal lahir wajib diisi').refine((date) => {
     const birthDate = new Date(date);
