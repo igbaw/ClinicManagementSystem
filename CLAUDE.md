@@ -32,7 +32,8 @@ The system has no automated tests yet. Manual testing workflow is documented in 
 - **Language**: TypeScript 5 (strict mode)
 - **Database**: Supabase (PostgreSQL) with Row Level Security (RLS)
 - **Auth**: Supabase Auth with session-based authentication
-- **Styling**: Tailwind CSS v4 with custom design system
+- **Styling**: Tailwind CSS v4 with custom design system + shadcn/ui components
+- **UI Components**: shadcn/ui (14 components) with Radix UI primitives
 - **State**: React Hook Form + Zod for forms; Zustand for global state (minimal use)
 - **Icons**: Lucide React
 - **External APIs**: BPJS VClaim, SATUSEHAT, Midtrans (payment)
@@ -99,25 +100,76 @@ const supabase = createClient();
 
 Never mix these - server client uses cookies(), client uses browser storage.
 
-## Design System
+## Design System (shadcn/ui + Custom)
 
-Custom design system implemented in `globals.css` with Bali-inspired colors. Documentation in `DESIGN_SYSTEM_IMPLEMENTATION.md`.
+Complete design system using **shadcn/ui components** integrated with Bali-inspired colors. Full documentation in `DESIGN_SYSTEM_IMPLEMENTATION.md`.
 
 **Colors:**
 - Primary: Navy Blue (#3B82F6 → #1E3A8A) with gradient
 - Secondary: Turquoise (#06B6D4 → #164E63)
-- Semantic: Success (green), Warning (amber), Error (red)
+- Semantic: Success (green), Warning (amber), Destructive (red)
+- Muted: Slate grays for secondary text and borders
 
-**Components** (`@/components/ui`):
-- `Button`: 5 variants (primary, secondary, ghost, danger, success), 3 sizes, loading state
-- `Card`: Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
-- `Badge`: 6 color variants for status indicators
+**shadcn/ui Components** (`@/components/ui`):
 
-**Usage:**
+*Form Components:*
+- `Input`: Text input with focus ring and error states
+- `Label`: Accessible form labels (Radix UI)
+- `Textarea`: Multi-line text input
+- `Select`: Dropdown with Radix UI primitives (SelectTrigger, SelectContent, SelectItem)
+
+*Data Display:*
+- `Table`: Responsive tables (TableHeader, TableBody, TableRow, TableHead, TableCell)
+- `Card`: Container with hover effects (CardHeader, CardTitle, CardDescription, CardContent, CardFooter)
+- `Badge`: Status indicators (6 variants: primary, secondary, success, warning, error, gray)
+- `Separator`: Visual dividers (Radix UI)
+
+*Interactive:*
+- `Button`: 5 variants, 3 sizes, loading state, `asChild` prop for Link integration
+- `Dialog`: Modals with Radix UI (DialogTrigger, DialogContent, DialogHeader, DialogTitle)
+- `Dropdown Menu`: Context menus with Radix UI
+- `Toast` + `Toaster`: Global notification system
+
+**Usage Examples:**
 ```typescript
+// Form with shadcn components
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { cn } from '@/lib/utils'; // For class merging
+
+<div className="space-y-2">
+  <Label htmlFor="name">Full Name *</Label>
+  <Input id="name" {...register('name')} />
+  {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
+</div>
+
+// Button with Link (asChild prop)
+<Button variant="primary" asChild>
+  <Link href="/patients/new">Register Patient</Link>
+</Button>
+
+// Table with data
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {data.map(item => (
+      <TableRow key={item.id}>
+        <TableCell>{item.name}</TableCell>
+        <TableCell><Badge variant="success">Active</Badge></TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+
+// Utility for class merging
+import { cn } from '@/lib/utils';
 ```
 
 ## Important Patterns
@@ -186,9 +238,12 @@ MIDTRANS_CLIENT_KEY=your_client_key
 ### Adding New Features to Existing Pages
 1. Check the route structure in `app/(dashboard)/[feature]/`
 2. UI components go in `components/[feature]/`
-3. Shared UI components go in `components/ui/`
+3. **Use shadcn/ui components** from `components/ui/` (Input, Label, Button, Table, Card, etc.)
 4. Database queries use Supabase client (server or client based on context)
-5. Form validation uses Zod schemas
+5. Form validation uses Zod schemas + React Hook Form
+6. **Always use Button component** instead of hardcoded button classes
+7. **Always use Table component** for data tables instead of raw HTML
+8. **Always use Input + Label** for form fields instead of raw HTML inputs
 
 ### Working with Database
 1. Create migration file in `Apps/web/supabase/migrations/`
@@ -203,11 +258,16 @@ MIDTRANS_CLIENT_KEY=your_client_key
 4. Return `NextResponse.json(data)` or `NextResponse.json({ error }, { status })`
 
 ### Styling Guidelines
-- Use Tailwind utility classes
+- **Use shadcn/ui components** for all UI elements (Button, Input, Table, Card, etc.)
+- Use Tailwind utility classes for layout and spacing
 - Follow existing component patterns in `components/ui/`
 - Use `cn()` utility for conditional classes
-- Respect design system colors (primary-*, secondary-*, success, warning, error)
+- Respect design system colors (primary-*, secondary-*, success, warning, destructive)
+- Use semantic color variables (text-destructive, bg-muted, border-input, etc.)
 - Add animations with existing keyframes (fadeIn, slideInBottom, scaleIn)
+- **Never hardcode button styles** - always use `<Button>` component
+- **Never use raw HTML forms** - use Input, Label, Textarea components
+- **Never use raw HTML tables** - use Table component with all primitives
 
 ## Known Issues & Limitations
 
@@ -216,12 +276,79 @@ MIDTRANS_CLIENT_KEY=your_client_key
 3. **BPJS sandbox** - Requires valid credentials from Indonesian BPJS
 4. **File uploads** - Storage buckets configured but document attachment UI incomplete
 5. **Next.js 16** - Uses latest features; requires Node.js 18.17+
+6. **Font loading in build** - Google Fonts may fail in offline/sandboxed builds (not a production issue)
 
 ## Additional Documentation
 
+- `DESIGN_SYSTEM_IMPLEMENTATION.md` - **shadcn/ui integration guide**, component usage, Vercel design principles
 - `LAUNCH_CHECKLIST.md` - Complete testing workflow and deployment readiness
-- `DESIGN_SYSTEM_IMPLEMENTATION.md` - UI component usage and design tokens
 - `Documents/tech_architecture.md` - Detailed technical architecture
 - `Documents/detailed_features.md` - Feature specifications
 - `Documents/indonesian_user_manual.md` - End-user guide (Bahasa Indonesia)
 - `Documents/deployment_guide.md` - Vercel deployment instructions
+- `components.json` - shadcn/ui configuration file
+
+## Component Quick Reference
+
+**Forms:**
+```typescript
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+
+<Label htmlFor="field">Label *</Label>
+<Input id="field" {...register('field')} />
+<Textarea rows={3} {...register('notes')} />
+<Button variant="primary" type="submit">Save</Button>
+```
+
+**Tables:**
+```typescript
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Column</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Data</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+**Cards:**
+```typescript
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+
+<Card>
+  <CardHeader>
+    <CardTitle>Title</CardTitle>
+  </CardHeader>
+  <CardContent>
+    Content here
+  </CardContent>
+</Card>
+```
+
+**Buttons:**
+```typescript
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
+// Regular button
+<Button variant="primary" onClick={handleClick}>Click</Button>
+
+// With Link (asChild)
+<Button variant="success" asChild>
+  <Link href="/path">Navigate</Link>
+</Button>
+
+// With loading
+<Button variant="primary" isLoading={isSubmitting}>Save</Button>
+```
