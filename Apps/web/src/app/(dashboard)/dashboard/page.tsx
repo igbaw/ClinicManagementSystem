@@ -223,10 +223,10 @@ export default async function DashboardPage() {
             {recentPatients && recentPatients.length > 0 ? (
               <div className="space-y-3">
                 {recentPatients.map((patient: any) => (
-                  <div
+                  <Link
                     key={patient.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                    onClick={() => window.location.href = `/patients/${patient.id}`}
+                    href={`/patients/${patient.id}`}
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div>
                       <p className="font-medium text-sm">{patient.full_name}</p>
@@ -237,7 +237,7 @@ export default async function DashboardPage() {
                     <p className="text-xs text-muted-foreground">
                       {formatDate(patient.created_at)}
                     </p>
-                  </div>
+                  </Link>
                 ))}
                 <Button variant="ghost" size="sm" className="w-full" asChild>
                   <Link href="/patients">
