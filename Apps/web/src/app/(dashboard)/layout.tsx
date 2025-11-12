@@ -19,13 +19,33 @@ export default async function DashboardLayout({
   }
 
   // Ensure user row exists (bootstrap)
+  // Check if user already exists first to avoid overwriting their role
   const userId = session.user.id;
   const email = session.user.email ?? "user@local";
-  await supabase
+
+  const { data: existingUser } = await supabase
     .from('users')
-    .upsert({ id: userId, full_name: email, role: 'admin', is_active: true })
-    .select('id')
+    .select('id, role')
+    .eq('id', userId)
     .single();
+
+  // Only create user if they don't exist
+  // Default to 'front_desk' for new users (admin should be assigned manually)
+  if (!existingUser) {
+    const userMetadata = session.user.user_metadata;
+    const defaultRole = userMetadata?.default_role || 'front_desk';
+
+    await supabase
+      .from('users')
+      .insert({
+        id: userId,
+        full_name: email,
+        role: defaultRole,
+        is_active: true
+      })
+      .select('id')
+      .single();
+  }
 
   return (
     <div className="h-screen w-full grid grid-cols-[16rem_1fr] bg-gradient-to-br from-gray-50 via-primary-50/30 to-secondary-50/20">
