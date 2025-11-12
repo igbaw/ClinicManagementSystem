@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/client";
 import { LogOut, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useUserRole } from '@/lib/hooks/useUserRole';
+import { getRoleDisplayName } from '@/lib/permissions';
 
 const pageTitles: Record<string, string> = {
   '/dashboard': 'Dashboard',
@@ -22,6 +24,7 @@ const pageTitles: Record<string, string> = {
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
+  const { role, fullName, loading } = useUserRole();
 
   async function logout() {
     const supabase = createClient();
@@ -31,6 +34,8 @@ export default function Header() {
   }
 
   const pageTitle = pageTitles[pathname || ''] || 'Dashboard';
+  const displayName = fullName || 'Loading...';
+  const displayRole = role ? getRoleDisplayName(role) : '...';
 
   return (
     <header className="h-16 flex items-center justify-between border-b border-gray-200/50 bg-white/95 backdrop-blur-sm px-6 shadow-sm">
@@ -58,8 +63,10 @@ export default function Header() {
         {/* User Menu */}
         <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-900">Admin User</p>
-            <p className="text-xs text-gray-500">Administrator</p>
+            <p className="text-sm font-medium text-gray-900">
+              {loading ? 'Memuat...' : displayName}
+            </p>
+            <p className="text-xs text-gray-500">{displayRole}</p>
           </div>
           <button className="p-2 rounded-full bg-gradient-to-br from-primary-100 to-secondary-100 hover:from-primary-200 hover:to-secondary-200 transition-all duration-200 shadow-sm">
             <User className="h-5 w-5 text-primary-700" />

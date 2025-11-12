@@ -170,12 +170,15 @@ export default async function PatientDetailPage({
           </Link>
           <h1 className="text-2xl font-bold mt-2">Detail Pasien</h1>
         </div>
-        <Link
-          href={`/patients/${id}/edit`}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Edit
-        </Link>
+        {/* Only front desk and admin can edit patient details */}
+        {currentUser?.role !== 'doctor' && (
+          <Link
+            href={`/patients/${id}/edit`}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Edit
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -332,23 +335,26 @@ export default async function PatientDetailPage({
             </div>
           </div>
 
-          <div className="border rounded-lg p-6 bg-white">
-            <h2 className="text-lg font-semibold mb-4">Aksi Cepat</h2>
-            <div className="space-y-2">
-              <Link
-                href={`/appointments/new?patient=${id}`}
-                className="block w-full px-4 py-2 text-center bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                📅 Buat Janji Temu
-              </Link>
-              <Link
-                href={`/medical-records/new?patient=${id}&walkin=true`}
-                className="block w-full px-4 py-2 text-center bg-green-600 text-white rounded-md hover:bg-green-700"
-              >
-                🚶 Walk-in Kunjungan
-              </Link>
+          {/* Quick Actions - only for front desk and admin */}
+          {currentUser?.role !== 'doctor' && (
+            <div className="border rounded-lg p-6 bg-white">
+              <h2 className="text-lg font-semibold mb-4">Aksi Cepat</h2>
+              <div className="space-y-2">
+                <Link
+                  href={`/appointments/new?patient=${id}`}
+                  className="block w-full px-4 py-2 text-center bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  📅 Buat Janji Temu
+                </Link>
+                <Link
+                  href={`/medical-records/new?patient=${id}&walkin=true`}
+                  className="block w-full px-4 py-2 text-center bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                  🚶 Walk-in Kunjungan
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

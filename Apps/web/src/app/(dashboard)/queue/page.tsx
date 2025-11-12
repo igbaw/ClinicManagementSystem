@@ -10,14 +10,21 @@ export const revalidate = 0;
 
 export default async function QueuePage() {
   const supabase = await createServerClient();
-  
-  // Get current user to filter by doctor
+
+  // Get current user and their role
   const { data: { user } } = await supabase.auth.getUser();
-  
+
+  // Fetch user role to determine queue visibility
+  const { data: currentUser } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user?.id)
+    .single();
+
   const today = new Date().toISOString().split('T')[0];
-  
-  // Get all queue entries for today (unified queue)
-  const { data: queueEntries, error } = await supabase
+
+  // Build query with role-based filtering
+  let query = supabase
     .from("queue_entries")
     .select(`
       id,
@@ -47,6 +54,13 @@ export default async function QueuePage() {
     .in("status", ["waiting", "in_progress"])
     .order("queue_number", { ascending: true });
 
+  // Filter by doctor for doctor role - they should only see their own patients
+  if (currentUser?.role === 'doctor') {
+    query = query.eq('doctor_id', user?.id);
+  }
+
+  const { data: queueEntries, error } = await query;
+
   // Debug info
   if (error) {
     console.error('Queue page error:', error);
@@ -67,18 +81,24 @@ export default async function QueuePage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Antrian Pasien</h1>
           <p className="text-gray-600">
-            Daftar pasien yang sudah check-in dan menunggu pemeriksaan
+            {currentUser?.role === 'doctor'
+              ? 'Daftar pasien Anda yang sudah check-in dan menunggu pemeriksaan'
+              : 'Daftar pasien yang sudah check-in dan menunggu pemeriksaan'
+            }
           </p>
           <p className="text-xs text-gray-500 mt-1">
             Tanggal: {new Date(today).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="primary" asChild>
-            <Link href="/walk-in">
-              + Check-in Walk-in
-            </Link>
-          </Button>
+          {/* Hide walk-in button for doctors - only front desk can check-in walk-ins */}
+          {currentUser?.role !== 'doctor' && (
+            <Button variant="primary" asChild>
+              <Link href="/walk-in">
+                + Check-in Walk-in
+              </Link>
+            </Button>
+          )}
           <Button variant="secondary" asChild>
             <Link href="/queue">
               🔄 Refresh

@@ -75,14 +75,22 @@ Apps/web/src/
 - **Client**: Use `createClient()` from `@/lib/supabase/client`
 - **Server Components/Actions**: Use `createServerClient()` from `@/lib/supabase/server`
 - **Session Check**: All dashboard routes auto-redirect to `/login` if unauthenticated
-- **User Bootstrap**: First login auto-creates user record with 'admin' role
+- **User Bootstrap**: First login auto-creates user record with 'front_desk' role (existing users' roles preserved)
+- **Role-Based Access**: Navigation, UI, and features filtered by user role (admin, doctor, front_desk)
+- **Default User**: System includes a seeded front desk user for testing:
+  - **Email**: `frontdesk@aionclinic.com`
+  - **Password**: `!Password.123`
+  - **Role**: front_desk
+  - ⚠️ **Important**: Change password in production!
 
 ### Database
 
 - **Location**: `Apps/web/supabase/migrations/`
-- **Migrations**: 14 migration files covering schema, RLS policies, ICD-10 codes, queue system
+- **Migrations**: 15 migration files covering schema, RLS policies, ICD-10 codes, queue system, default users
 - **Key Tables**: users, patients, appointments, medical_records, prescriptions, medications, billings, payments, icd10_codes, queue_items
 - **Apply Migrations**: Run SQL files in Supabase Dashboard → SQL Editor (in order)
+- **Default Data**: Migration `20250104000003` seeds a default front desk user for testing
+- **Documentation**: See `Apps/web/supabase/migrations/README.md` for details
 
 ### Supabase Client Pattern
 
@@ -212,6 +220,46 @@ Edit `Apps/web/src/config/clinic.ts` to change:
 - Operating days (0=Sunday, 6=Saturday)
 - Appointment slot duration (minutes)
 - Clinic info (name, address, phone)
+
+### User Roles & Permissions
+
+The system supports three user roles with distinct access levels:
+
+**1. Admin Role** (`admin`)
+- Full system access
+- User management
+- All CRUD operations on all tables
+- Access to reports and analytics
+- BPJS integration
+- Can view/edit all medical records
+
+**2. Doctor Role** (`doctor`)
+- View queue (only their assigned patients)
+- Create and edit medical records (their own only, within 24 hours)
+- Create prescriptions
+- View patient details (read-only - cannot edit patient info)
+- View medical records history
+- **Cannot**: Edit patients, create appointments, access billing, manage inventory
+
+**3. Front Desk Role** (`front_desk`)
+- Register and edit patients
+- Create and manage appointments
+- Process billing and payments
+- Manage medication inventory
+- BPJS eligibility checks and SEP creation
+- Check-in walk-in patients
+- **Cannot**: Create medical records, prescriptions, view sensitive medical data
+
+**Permission Utilities:**
+- `lib/permissions.ts`: Centralized role-based navigation and permission configuration
+- `lib/hooks/useUserRole.ts`: React hooks for role checking (`useUserRole()`, `usePermission()`)
+- **RLS Policies**: Database-level security in `supabase/migrations/20250102000000_add_rls_policies.sql`
+
+**Changing User Roles:**
+Roles must be updated directly in the database:
+```sql
+UPDATE users SET role = 'doctor' WHERE id = 'user-uuid';
+```
 
 ## Environment Variables
 
