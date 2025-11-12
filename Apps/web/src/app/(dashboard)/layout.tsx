@@ -1,5 +1,6 @@
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
+import { Toaster } from "@/components/ui/toaster";
 import { createServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -37,6 +38,7 @@ export default async function DashboardLayout({
           </div>
         </main>
       </div>
+      <Toaster />
     </div>
   );
 }

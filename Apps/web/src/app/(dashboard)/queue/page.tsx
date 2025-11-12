@@ -1,5 +1,8 @@
 import { createServerClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Force dynamic rendering and disable caching
 export const dynamic = 'force-dynamic';
@@ -71,18 +74,16 @@ export default async function QueuePage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Link
-            href="/walk-in"
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            + Check-in Walk-in
-          </Link>
-          <Link
-            href="/queue"
-            className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            🔄 Refresh
-          </Link>
+          <Button variant="primary" asChild>
+            <Link href="/walk-in">
+              + Check-in Walk-in
+            </Link>
+          </Button>
+          <Button variant="secondary" asChild>
+            <Link href="/queue">
+              🔄 Refresh
+            </Link>
+          </Button>
         </div>
       </div>
 
@@ -115,12 +116,11 @@ export default async function QueuePage() {
             Pasien yang sudah check-in akan muncul di sini
           </p>
           <div className="mt-6">
-            <Link
-              href="/appointments"
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-            >
-              Lihat Jadwal Appointment
-            </Link>
+            <Button variant="primary" asChild>
+              <Link href="/appointments">
+                Lihat Jadwal Appointment
+              </Link>
+            </Button>
           </div>
         </div>
       ) : (
@@ -226,16 +226,15 @@ export default async function QueuePage() {
                 {/* Action Button */}
                 <div className="flex-shrink-0 ml-4">
                   {entry.status === 'waiting' ? (
-                    <Link
-                      href={`/medical-records/new?queue=${entry.id}`}
-                      className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium"
-                    >
-                      Mulai Pemeriksaan
-                    </Link>
+                    <Button variant="success" asChild>
+                      <Link href={`/medical-records/new?queue=${entry.id}`}>
+                        Mulai Pemeriksaan
+                      </Link>
+                    </Button>
                   ) : (
-                    <span className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-md font-medium">
+                    <Button variant="secondary" disabled>
                       Sedang Diperiksa
-                    </span>
+                    </Button>
                   )}
                 </div>
               </div>

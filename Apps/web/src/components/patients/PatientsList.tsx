@@ -4,6 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PatientSearch from "./PatientSearch";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface Patient {
   id: string;
@@ -46,110 +57,102 @@ export default function PatientsList({ initialPatients }: { initialPatients: Pat
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
-        <button
+        <Button
+          variant={showSearch ? "secondary" : "ghost"}
           onClick={() => setShowSearch(!showSearch)}
-          className="px-4 py-2 border rounded-md hover:bg-gray-50"
         >
           {showSearch ? "Tutup Pencarian" : "Cari Pasien"}
-        </button>
+        </Button>
       </div>
 
       {showSearch && (
-        <div className="p-4 border rounded-lg bg-gray-50">
-          <PatientSearch onSelect={(p) => router.push(`/patients/${p.id}`)} />
-        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <PatientSearch onSelect={(p) => router.push(`/patients/${p.id}`)} />
+          </CardContent>
+        </Card>
       )}
 
       {initialPatients.length === 0 ? (
-        <div className="text-center py-12 border rounded-lg">
-          <p className="text-gray-500">Belum ada pasien terdaftar</p>
-        </div>
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">Belum ada pasien terdaftar</p>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">No. RM</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Nama Lengkap</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">NIK</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Umur</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Jenis Kelamin</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Telepon</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Terdaftar</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {initialPatients.map((patient) => (
-                <tr
-                  key={patient.id}
-                  className="hover:bg-gray-50"
-                >
-                  <td 
-                    className="px-4 py-3 text-sm cursor-pointer hover:text-blue-600"
+        <Card>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>No. RM</TableHead>
+                  <TableHead>Nama Lengkap</TableHead>
+                  <TableHead>NIK</TableHead>
+                  <TableHead>Umur</TableHead>
+                  <TableHead>Jenis Kelamin</TableHead>
+                  <TableHead>Telepon</TableHead>
+                  <TableHead>Terdaftar</TableHead>
+                  <TableHead>Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {initialPatients.map((patient) => (
+                  <TableRow
+                    key={patient.id}
+                    className="cursor-pointer"
                     onClick={() => router.push(`/patients/${patient.id}`)}
                   >
-                    {patient.medical_record_number}
-                  </td>
-                  <td 
-                    className="px-4 py-3 text-sm font-medium cursor-pointer hover:text-blue-600"
-                    onClick={() => router.push(`/patients/${patient.id}`)}
-                  >
-                    {patient.full_name}
-                  </td>
-                  <td 
-                    className="px-4 py-3 text-sm cursor-pointer hover:text-blue-600"
-                    onClick={() => router.push(`/patients/${patient.id}`)}
-                  >
-                    {patient.nik}
-                  </td>
-                  <td 
-                    className="px-4 py-3 text-sm cursor-pointer hover:text-blue-600"
-                    onClick={() => router.push(`/patients/${patient.id}`)}
-                  >
-                    {calculateAge(patient.date_of_birth)} tahun
-                  </td>
-                  <td 
-                    className="px-4 py-3 text-sm cursor-pointer hover:text-blue-600"
-                    onClick={() => router.push(`/patients/${patient.id}`)}
-                  >
-                    {patient.gender}
-                  </td>
-                  <td 
-                    className="px-4 py-3 text-sm cursor-pointer hover:text-blue-600"
-                    onClick={() => router.push(`/patients/${patient.id}`)}
-                  >
-                    {patient.phone}
-                  </td>
-                  <td 
-                    className="px-4 py-3 text-sm text-gray-500 cursor-pointer hover:text-blue-600"
-                    onClick={() => router.push(`/patients/${patient.id}`)}
-                  >
-                    {formatDate(patient.created_at)}
-                  </td>
-                  <td className="px-4 py-3 text-sm">
-                    <div className="flex gap-1">
-                      <Link
-                        href={`/appointments/new?patient=${patient.id}`}
-                        className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
-                        title="Buat Janji Temu"
-                      >
-                        Janji
-                      </Link>
-                      <Link
-                        href={`/medical-records/new?patient=${patient.id}&walkin=true`}
-                        className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                        title="Walk-in"
-                      >
-                        Walk-in
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    <TableCell className="font-medium text-primary hover:underline">
+                      {patient.medical_record_number}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {patient.full_name}
+                    </TableCell>
+                    <TableCell className="font-mono text-sm">
+                      {patient.nik}
+                    </TableCell>
+                    <TableCell>
+                      {calculateAge(patient.date_of_birth)} tahun
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={patient.gender === "Laki-laki" ? "primary" : "secondary"}>
+                        {patient.gender}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-mono text-sm">
+                      {patient.phone}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-sm">
+                      {formatDate(patient.created_at)}
+                    </TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="success"
+                          asChild
+                        >
+                          <Link href={`/appointments/new?patient=${patient.id}`}>
+                            Janji Temu
+                          </Link>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          asChild
+                        >
+                          <Link href={`/medical-records/new?patient=${patient.id}&walkin=true`}>
+                            Walk-in
+                          </Link>
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
