@@ -167,12 +167,20 @@ export default function NewBillingPage() {
     const { data: userRes } = await supabase.auth.getUser();
     const createdBy = userRes?.user?.id;
 
+    // Get doctor_id from medical record
+    const { data: mrData } = await supabase
+      .from('medical_records')
+      .select('doctor_id')
+      .eq('id', medicalRecord.id)
+      .single();
+
     const { data: bill, error } = await supabase
       .from('billings')
       .insert({
         patient_id: medicalRecord.patient_id,
         appointment_id: medicalRecord.appointment_id,
         medical_record_id: medicalRecord.id,
+        doctor_id: mrData?.doctor_id || createdBy, // Use medical record's doctor or fallback to current user
         subtotal,
         discount,
         tax,
