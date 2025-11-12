@@ -3,14 +3,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import QuickActions from "@/components/dashboard/QuickActions";
 import {
   Users,
   Calendar,
-  Activity,
-  DollarSign,
   Package,
   Clock,
-  TrendingUp,
   AlertCircle
 } from "lucide-react";
 
@@ -135,38 +133,7 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Aksi Cepat</CardTitle>
-            <CardDescription>Pilih tindakan yang ingin dilakukan</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button variant="primary" className="w-full justify-start" asChild>
-              <Link href="/walk-in">
-                <Activity className="mr-2 h-4 w-4" />
-                Check-in Pasien Walk-in
-              </Link>
-            </Button>
-            <Button variant="secondary" className="w-full justify-start" asChild>
-              <Link href="/patients/new">
-                <Users className="mr-2 h-4 w-4" />
-                Registrasi Pasien Baru
-              </Link>
-            </Button>
-            <Button variant="secondary" className="w-full justify-start" asChild>
-              <Link href="/appointments/new">
-                <Calendar className="mr-2 h-4 w-4" />
-                Buat Janji Temu
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/queue">
-                <Clock className="mr-2 h-4 w-4" />
-                Lihat Antrian
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <QuickActions />
 
         {/* Today's Appointments */}
         <Card>
@@ -223,10 +190,10 @@ export default async function DashboardPage() {
             {recentPatients && recentPatients.length > 0 ? (
               <div className="space-y-3">
                 {recentPatients.map((patient: any) => (
-                  <div
+                  <Link
                     key={patient.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                    onClick={() => window.location.href = `/patients/${patient.id}`}
+                    href={`/patients/${patient.id}`}
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div>
                       <p className="font-medium text-sm">{patient.full_name}</p>
@@ -237,7 +204,7 @@ export default async function DashboardPage() {
                     <p className="text-xs text-muted-foreground">
                       {formatDate(patient.created_at)}
                     </p>
-                  </div>
+                  </Link>
                 ))}
                 <Button variant="ghost" size="sm" className="w-full" asChild>
                   <Link href="/patients">
