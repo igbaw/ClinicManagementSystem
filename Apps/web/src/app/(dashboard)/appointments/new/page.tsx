@@ -3,9 +3,16 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import PatientSelector from "@/components/appointments/PatientSelector";
 import DatePicker from "@/components/calendar/DatePicker";
 import { generateTimeSlots, getClinicHoursString } from "@/config/clinic";
+import { Calendar, Clock, FileText, CheckCircle } from "lucide-react";
 
 interface Doctor {
   id: string;
@@ -40,6 +47,13 @@ export default function NewAppointmentPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [createdAppointment, setCreatedAppointment] = useState<any>(null);
+
+  // BPJS fields (optional)
+  const [isBPJS, setIsBPJS] = useState(false);
+  const [bpjsCardNumber, setBpjsCardNumber] = useState("");
+  const [rujukanNumber, setRujukanNumber] = useState("");
+  const [rujukanDate, setRujukanDate] = useState<Date | null>(null);
+  const [rujukanPPKCode, setRujukanPPKCode] = useState("");
 
   const slots = generateTimeSlots();
   const clinicHoursText = getClinicHoursString();
@@ -129,17 +143,27 @@ export default function NewAppointmentPage() {
 
     try {
       const dateStr = date.toISOString().split('T')[0];
-      
+
+      const appointmentData: any = {
+        patient_id: patientId,
+        doctor_id: doctorId,
+        appointment_date: dateStr,
+        appointment_time: `${time}:00`,
+        status: "scheduled",
+        notes: notes || null,
+      };
+
+      // Add BPJS fields if enabled
+      if (isBPJS) {
+        appointmentData.bpjs_card_number = bpjsCardNumber || null;
+        appointmentData.rujukan_number = rujukanNumber || null;
+        appointmentData.rujukan_date = rujukanDate ? rujukanDate.toISOString().split('T')[0] : null;
+        appointmentData.rujukan_ppk_code = rujukanPPKCode || null;
+      }
+
       const { data: appointment, error } = await supabase
         .from("appointments")
-        .insert({
-          patient_id: patientId,
-          doctor_id: doctorId,
-          appointment_date: dateStr,
-          appointment_time: `${time}:00`,
-          status: "scheduled",
-          notes: notes || null,
-        })
+        .insert(appointmentData)
         .select(`
           *,
           patient:patients(full_name, medical_record_number),
@@ -161,75 +185,82 @@ export default function NewAppointmentPage() {
   if (showSuccess && createdAppointment) {
     return (
       <div className="max-w-2xl mx-auto py-12">
-        <div className="bg-white border rounded-lg shadow-lg p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Janji Temu Berhasil Dibuat!
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Janji temu telah terdaftar dalam sistem
-          </p>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6 text-left">
-            <h2 className="font-semibold text-lg mb-4">Detail Janji Temu</h2>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Pasien:</span>
-                <span className="font-medium">{createdAppointment.patient?.full_name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">No. RM:</span>
-                <span className="font-medium">{createdAppointment.patient?.medical_record_number}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Dokter:</span>
-                <span className="font-medium">{createdAppointment.doctor?.full_name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Tanggal:</span>
-                <span className="font-medium">
-                  {new Date(createdAppointment.appointment_date).toLocaleDateString("id-ID", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Waktu:</span>
-                <span className="font-medium">{createdAppointment.appointment_time?.slice(0, 5)}</span>
-              </div>
+        <Card className="shadow-lg">
+          <CardContent className="pt-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-success/10 rounded-full mb-4">
+              <CheckCircle className="w-8 h-8 text-success" />
             </div>
-          </div>
 
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => router.push("/appointments")}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Lihat Daftar Janji Temu
-            </button>
-            <button
-              onClick={() => {
-                setShowSuccess(false);
-                setPatientId("");
-                setSelectedPatient(null);
-                setTime("");
-                setNotes("");
-                setCreatedAppointment(null);
-              }}
-              className="px-6 py-2 border rounded-md hover:bg-gray-50"
-            >
-              Buat Janji Temu Lain
-            </button>
-          </div>
-        </div>
+            <h1 className="text-3xl font-bold mb-2">
+              Janji Temu Berhasil Dibuat!
+            </h1>
+            <p className="text-muted-foreground mb-6">
+              Janji temu telah terdaftar dalam sistem
+            </p>
+
+            <Card className="bg-primary/5 border-primary/20 mb-6 text-left">
+              <CardHeader>
+                <CardTitle className="text-lg">Detail Janji Temu</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Pasien:</span>
+                  <span className="font-medium">{createdAppointment.patient?.full_name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">No. RM:</span>
+                  <span className="font-medium">{createdAppointment.patient?.medical_record_number}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Dokter:</span>
+                  <span className="font-medium">{createdAppointment.doctor?.full_name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Tanggal:</span>
+                  <span className="font-medium">
+                    {new Date(createdAppointment.appointment_date).toLocaleDateString("id-ID", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Waktu:</span>
+                  <span className="font-medium">{createdAppointment.appointment_time?.slice(0, 5)}</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="flex gap-4 justify-center">
+              <Button
+                variant="primary"
+                onClick={() => router.push("/appointments")}
+              >
+                Lihat Daftar Janji Temu
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setShowSuccess(false);
+                  setPatientId("");
+                  setSelectedPatient(null);
+                  setTime("");
+                  setNotes("");
+                  setIsBPJS(false);
+                  setBpjsCardNumber("");
+                  setRujukanNumber("");
+                  setRujukanDate(null);
+                  setRujukanPPKCode("");
+                  setCreatedAppointment(null);
+                }}
+              >
+                Buat Janji Temu Lain
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -237,16 +268,21 @@ export default function NewAppointmentPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Buat Janji Temu Baru</h1>
-        <p className="text-gray-600">Jadwalkan kunjungan pasien dengan dokter</p>
+        <h1 className="text-2xl font-bold">Buat Janji Temu Baru</h1>
+        <p className="text-muted-foreground">Jadwalkan kunjungan pasien dengan dokter</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border rounded-lg p-6 space-y-6">
-        {errors.submit && (
-          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
-            {errors.submit}
-          </div>
-        )}
+      <form onSubmit={handleSubmit}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Informasi Janji Temu</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {errors.submit && (
+              <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md">
+                {errors.submit}
+              </div>
+            )}
 
         {/* Patient Selection */}
         <PatientSelector
@@ -260,17 +296,16 @@ export default function NewAppointmentPage() {
         />
 
         {/* Doctor Selection */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Dokter *
-          </label>
+        <div className="space-y-2">
+          <Label htmlFor="doctor">Dokter *</Label>
           <select
+            id="doctor"
             value={doctorId}
             onChange={(e) => {
               setDoctorId(e.target.value);
               setErrors({ ...errors, doctor: "" });
             }}
-            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="">Pilih Dokter</option>
             {doctors.map((doctor) => (
@@ -279,15 +314,13 @@ export default function NewAppointmentPage() {
               </option>
             ))}
           </select>
-          {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
+          {errors.doctor && <p className="text-sm text-destructive mt-1">{errors.doctor}</p>}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Date Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tanggal *
-            </label>
+          <div className="space-y-2">
+            <Label htmlFor="date">Tanggal *</Label>
             <DatePicker
               value={date}
               onChange={(newDate) => {
@@ -299,71 +332,146 @@ export default function NewAppointmentPage() {
               className="w-full"
             />
             {errors.date && (
-              <p className="text-red-600 text-sm mt-1">{errors.date}</p>
+              <p className="text-sm text-destructive mt-1">{errors.date}</p>
             )}
           </div>
 
           {/* Time Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Waktu *
-            </label>
-            <select
-              value={time}
-              onChange={(e) => {
-                setTime(e.target.value);
-                setErrors({ ...errors, time: "" });
-              }}
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">Pilih Waktu</option>
-              {slots.map((slot) => (
-                <option
-                  key={slot}
-                  value={slot}
-                  disabled={bookedSlots.has(slot)}
-                >
-                  {slot} {bookedSlots.has(slot) ? "(Terisi)" : ""}
-                </option>
-              ))}
-            </select>
-            {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
-            <p className="text-xs text-gray-500 mt-1">
+          <div className="space-y-2">
+            <Label htmlFor="time">Waktu *</Label>
+            <div className="relative">
+              <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <select
+                id="time"
+                value={time}
+                onChange={(e) => {
+                  setTime(e.target.value);
+                  setErrors({ ...errors, time: "" });
+                }}
+                className="w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
+                <option value="">Pilih Waktu</option>
+                {slots.map((slot) => (
+                  <option
+                    key={slot}
+                    value={slot}
+                    disabled={bookedSlots.has(slot)}
+                  >
+                    {slot} {bookedSlots.has(slot) ? "(Terisi)" : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {errors.time && <p className="text-sm text-destructive mt-1">{errors.time}</p>}
+            <p className="text-xs text-muted-foreground">
               Jam operasional: {clinicHoursText}
             </p>
           </div>
         </div>
 
         {/* Notes */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="space-y-2">
+          <Label htmlFor="notes" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
             Catatan (Opsional)
-          </label>
-          <textarea
+          </Label>
+          <Textarea
+            id="notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Tambahkan catatan untuk janji temu ini..."
-            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
-        <div className="flex justify-end gap-4 pt-4 border-t">
-          <button
+        <Separator />
+
+        {/* BPJS Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="is-bpjs"
+              checked={isBPJS}
+              onChange={(e) => setIsBPJS(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <Label htmlFor="is-bpjs" className="cursor-pointer">
+              Pasien BPJS (Opsional)
+            </Label>
+          </div>
+
+          {isBPJS && (
+            <div className="space-y-4 pl-6 border-l-2 border-primary/20">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bpjs-card">No. Kartu BPJS</Label>
+                  <Input
+                    id="bpjs-card"
+                    value={bpjsCardNumber}
+                    onChange={(e) => setBpjsCardNumber(e.target.value)}
+                    placeholder="1234567890123"
+                    maxLength={13}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="rujukan-number">No. Rujukan</Label>
+                  <Input
+                    id="rujukan-number"
+                    value={rujukanNumber}
+                    onChange={(e) => setRujukanNumber(e.target.value)}
+                    placeholder="Nomor rujukan"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="rujukan-date">Tanggal Rujukan</Label>
+                  <DatePicker
+                    value={rujukanDate || new Date()}
+                    onChange={(date) => setRujukanDate(date)}
+                    placeholder="Pilih tanggal rujukan"
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="rujukan-ppk">Kode PPK Rujukan</Label>
+                  <Input
+                    id="rujukan-ppk"
+                    value={rujukanPPKCode}
+                    onChange={(e) => setRujukanPPKCode(e.target.value)}
+                    placeholder="Kode PPK"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Separator />
+
+        <div className="flex justify-end gap-3">
+          <Button
             type="button"
+            variant="secondary"
             onClick={() => router.back()}
-            className="px-6 py-2 border rounded-md hover:bg-gray-50"
+            disabled={isSubmitting}
           >
             Batal
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
+            variant="primary"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            isLoading={isSubmitting}
           >
-            {isSubmitting ? "Membuat..." : "Buat Janji Temu"}
-          </button>
+            <Calendar className="h-4 w-4 mr-2" />
+            Buat Janji Temu
+          </Button>
         </div>
+          </CardContent>
+        </Card>
       </form>
     </div>
   );

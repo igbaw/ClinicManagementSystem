@@ -4,9 +4,13 @@ import { useState, useCallback } from "react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ClinicCalendar from "./ClinicCalendar";
 import Link from "next/link";
 import VitalSignsModal, { VitalSigns } from "../modals/VitalSignsModal";
+import { Calendar, Plus } from "lucide-react";
 
 interface Appointment {
   id: string;
@@ -147,42 +151,40 @@ export default function AppointmentCalendar({
 
       {/* Selected Date Appointments */}
       {selectedDate && (
-        <div className="bg-white rounded-lg shadow border">
-          <div className="border-b border-gray-200 p-4">
+        <Card>
+          <CardHeader>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">
-                Detail Janji Temu
-              </h3>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">
+              <div>
+                <CardTitle>Detail Janji Temu</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
                   {format(selectedDate, 'EEEE, d MMMM yyyy', { locale: id })}
-                </span>
-                <Link
-                  href={`/appointments/new?date=${format(selectedDate, 'yyyy-MM-dd')}`}
-                  className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
-                >
-                  + Janji Baru
-                </Link>
+                </p>
               </div>
+              <Button variant="primary" size="sm" asChild>
+                <Link href={`/appointments/new?date=${format(selectedDate, 'yyyy-MM-dd')}`}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Janji Baru
+                </Link>
+              </Button>
             </div>
-          </div>
+          </CardHeader>
 
-          <div className="p-4">
+          <CardContent>
             {loading ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 Memuat janji temu...
               </div>
             ) : selectedDateAppointments.length === 0 ? (
               <div className="text-center py-8 border-2 border-dashed rounded-lg">
-                <p className="text-gray-500 mb-4">
+                <p className="text-muted-foreground mb-4">
                   Tidak ada janji temu pada tanggal ini
                 </p>
-                <Link
-                  href={`/appointments/new?date=${format(selectedDate, 'yyyy-MM-dd')}`}
-                  className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  Buat Janji Temu Baru
-                </Link>
+                <Button variant="primary" asChild>
+                  <Link href={`/appointments/new?date=${format(selectedDate, 'yyyy-MM-dd')}`}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Buat Janji Temu Baru
+                  </Link>
+                </Button>
               </div>
             ) : (
               <div className="space-y-3">
@@ -204,24 +206,26 @@ export default function AppointmentCalendar({
                       
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium">
                             {getPatient(appointment)?.full_name}
                           </span>
-                          <span className={`text-xs px-2 py-1 rounded-full ${
-                            appointment.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
-                            appointment.status === 'checked_in' ? 'bg-green-100 text-green-800' :
-                            appointment.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
-                            appointment.status === 'completed' ? 'bg-gray-100 text-gray-800' :
-                            'bg-red-100 text-red-800'
-                          }`}>
+                          <Badge
+                            variant={
+                              appointment.status === 'scheduled' ? 'primary' :
+                              appointment.status === 'checked_in' ? 'success' :
+                              appointment.status === 'in_progress' ? 'warning' :
+                              appointment.status === 'completed' ? 'gray' :
+                              'error'
+                            }
+                          >
                             {appointment.status === 'scheduled' ? 'Terjadwal' :
                              appointment.status === 'checked_in' ? 'Check-in' :
                              appointment.status === 'in_progress' ? 'Berlangsung' :
                              appointment.status === 'completed' ? 'Selesai' :
                              'Dibatalkan'}
-                          </span>
+                          </Badge>
                         </div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-muted-foreground">
                           {getPatient(appointment)?.medical_record_number}
                           {getDoctor(appointment) && ` • Dr. ${getDoctor(appointment)?.full_name}`}
                         </div>
@@ -230,34 +234,33 @@ export default function AppointmentCalendar({
 
                     <div className="flex items-center gap-2">
                       {appointment.status === 'scheduled' && (
-                        <button
+                        <Button
+                          variant="success"
+                          size="sm"
                           onClick={() => handleCheckInClick(appointment)}
-                          className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
                         >
                           Check-in
-                        </button>
+                        </Button>
                       )}
                       {appointment.status === 'checked_in' && (
-                        <Link
-                          href="/queue"
-                          className="px-3 py-1 border border-green-600 text-green-600 text-sm rounded-md hover:bg-green-50"
-                        >
-                          Lihat Antrian
-                        </Link>
+                        <Button variant="secondary" size="sm" asChild>
+                          <Link href="/queue">
+                            Lihat Antrian
+                          </Link>
+                        </Button>
                       )}
-                      <Link
-                        href={`/appointments/${appointment.id}`}
-                        className="px-3 py-1 text-blue-600 text-sm hover:bg-blue-50 rounded-md"
-                      >
-                        Detail
-                      </Link>
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link href={`/appointments/${appointment.id}`}>
+                          Detail
+                        </Link>
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Vital Signs Modal */}

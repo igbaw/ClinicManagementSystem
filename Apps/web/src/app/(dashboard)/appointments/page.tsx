@@ -3,7 +3,12 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import AppointmentCalendar from "@/components/calendar/AppointmentCalendar";
+import AppointmentStats from "@/components/appointments/AppointmentStats";
+import { Calendar, ListOrdered } from "lucide-react";
 
 interface Doctor {
   id: string;
@@ -38,43 +43,54 @@ export default function AppointmentsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Janji Temu</h1>
+        <div>
+          <h1 className="text-2xl font-semibold">Janji Temu</h1>
+          <p className="text-sm text-muted-foreground">
+            Kelola jadwal janji temu pasien
+          </p>
+        </div>
         <div className="flex gap-3">
-          <Link
-            href="/queue"
-            className="rounded-md border border-green-600 text-green-600 px-4 py-2 hover:bg-green-50"
-          >
-            Lihat Antrian
-          </Link>
-          <Link
-            href="/appointments/new"
-            className="rounded-md bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
-          >
-            + Buat Janji Temu Baru
-          </Link>
+          <Button variant="secondary" asChild>
+            <Link href="/queue">
+              <ListOrdered className="h-4 w-4 mr-2" />
+              Lihat Antrian
+            </Link>
+          </Button>
+          <Button variant="primary" asChild>
+            <Link href="/appointments/new">
+              <Calendar className="h-4 w-4 mr-2" />
+              Buat Janji Temu Baru
+            </Link>
+          </Button>
         </div>
       </div>
 
+      {/* Appointment Statistics */}
+      <AppointmentStats />
+
       {/* Doctor Filter */}
-      <div className="bg-white border rounded-lg p-4">
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700">
-            Filter Dokter:
-          </label>
-          <select
-            value={selectedDoctor}
-            onChange={(e) => setSelectedDoctor(e.target.value)}
-            className="px-3 py-2 border rounded-md text-sm"
-          >
-            <option value="">Semua Dokter</option>
-            {doctors.map((doctor) => (
-              <option key={doctor.id} value={doctor.id}>
-                {doctor.full_name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-4">
+            <Label htmlFor="doctor-filter" className="text-sm font-medium whitespace-nowrap">
+              Filter Dokter:
+            </Label>
+            <select
+              id="doctor-filter"
+              value={selectedDoctor}
+              onChange={(e) => setSelectedDoctor(e.target.value)}
+              className="px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="">Semua Dokter</option>
+              {doctors.map((doctor) => (
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.full_name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Enhanced Calendar */}
       <AppointmentCalendar
