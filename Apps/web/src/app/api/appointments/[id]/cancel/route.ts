@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createServerClient();
@@ -18,7 +18,8 @@ export async function POST(
     }
 
     const { reason } = await request.json();
-    const appointmentId = params.id;
+    const { id } = await params;
+    const appointmentId = id;
 
     // Check if appointment exists
     const { data: appointment, error: fetchError } = await supabase
