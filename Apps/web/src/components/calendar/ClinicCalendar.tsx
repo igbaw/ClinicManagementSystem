@@ -62,18 +62,24 @@ export default function ClinicCalendar({
   // Generate calendar days
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
-  const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
-  const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
+
+  // For week view, show current week around selectedDate or currentMonth
+  const weekStart = startOfWeek(selectedDate || currentMonth, { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(selectedDate || currentMonth, { weekStartsOn: 1 });
+
+  // Use different start/end based on view mode
+  const startDate = viewMode === "week" ? weekStart : startOfWeek(monthStart, { weekStartsOn: 1 });
+  const endDate = viewMode === "week" ? weekEnd : endOfWeek(monthEnd, { weekStartsOn: 1 });
 
   const days = useMemo(() => {
     const days = [];
     let currentDate = startDate;
-    
+
     while (currentDate <= endDate) {
       days.push(currentDate);
       currentDate = addDays(currentDate, 1);
     }
-    
+
     return days;
   }, [startDate, endDate]);
 
@@ -231,7 +237,11 @@ export default function ClinicCalendar({
               Minggu
             </button>
             <button
-              onClick={() => setCurrentMonth(new Date())}
+              onClick={() => {
+                const today = new Date();
+                setCurrentMonth(today);
+                handleDateClick(today);
+              }}
               className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-md"
             >
               Hari Ini

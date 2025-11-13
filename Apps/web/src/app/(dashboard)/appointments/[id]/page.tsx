@@ -60,20 +60,33 @@ interface AppointmentHistory {
   } | null;
 }
 
-export default function AppointmentDetailPage({ params }: { params: { id: string } }) {
+export default function AppointmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const supabase = createClient();
+  const [appointmentId, setAppointmentId] = useState<string | null>(null);
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [history, setHistory] = useState<AppointmentHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   useEffect(() => {
-    loadAppointment();
-    loadHistory();
-  }, [params.id]);
+    const initializeParams = async () => {
+      const { id } = await params;
+      setAppointmentId(id);
+    };
+    initializeParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (appointmentId) {
+      loadAppointment();
+      loadHistory();
+    }
+  }, [appointmentId]);
 
   const loadAppointment = async () => {
+    if (!appointmentId) return;
+
     try {
       const { data, error } = await supabase
         .from("appointments")
@@ -90,7 +103,7 @@ export default function AppointmentDetailPage({ params }: { params: { id: string
           doctor:users!appointments_doctor_id_fkey(id, full_name),
           cancelled_by_user:users!appointments_cancelled_by_fkey(full_name)
         `)
-        .eq("id", params.id)
+        .eq("id", appointmentId)
         .single();
 
       if (error) throw error;
@@ -104,6 +117,8 @@ export default function AppointmentDetailPage({ params }: { params: { id: string
   };
 
   const loadHistory = async () => {
+    if (!appointmentId) return;
+
     try {
       const { data, error } = await supabase
         .from("appointment_history")
@@ -111,7 +126,7 @@ export default function AppointmentDetailPage({ params }: { params: { id: string
           *,
           changed_by_user:users(full_name)
         `)
-        .eq("appointment_id", params.id)
+        .eq("appointment_id", appointmentId)
         .order("changed_at", { ascending: false });
 
       if (error) throw error;
@@ -122,8 +137,10 @@ export default function AppointmentDetailPage({ params }: { params: { id: string
   };
 
   const handleCancelAppointment = async (reason: string) => {
+    if (!appointmentId) return;
+
     try {
-      const response = await fetch(`/api/appointments/${params.id}/cancel`, {
+      const response = await fetch(`/api/appointments/${appointmentId}/cancel`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason }),

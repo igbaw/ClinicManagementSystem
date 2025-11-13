@@ -78,7 +78,7 @@ export default function AppointmentCalendar({
       }
 
       const { data, error } = await query;
-      
+
       if (error) {
         console.error("Error loading appointments:", error);
         alert(`Gagal memuat janji temu: ${error.message}`);
@@ -93,7 +93,7 @@ export default function AppointmentCalendar({
     } finally {
       setLoading(false);
     }
-  }, [doctorId]);
+  }, [doctorId, supabase]);
 
   const handleAppointmentClick = useCallback((appointment: Appointment) => {
     onAppointmentSelect?.(appointment);

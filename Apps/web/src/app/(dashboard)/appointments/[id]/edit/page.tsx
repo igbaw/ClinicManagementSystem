@@ -31,10 +31,11 @@ interface Appointment {
   };
 }
 
-export default function EditAppointmentPage({ params }: { params: { id: string } }) {
+export default function EditAppointmentPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
 
+  const [appointmentId, setAppointmentId] = useState<string | null>(null);
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [doctorId, setDoctorId] = useState("");
@@ -49,13 +50,26 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
   const slots = generateTimeSlots();
   const clinicHoursText = getClinicHoursString();
 
+  // Initialize params
+  useEffect(() => {
+    const initializeParams = async () => {
+      const { id } = await params;
+      setAppointmentId(id);
+    };
+    initializeParams();
+  }, [params]);
+
   // Load appointment data
   useEffect(() => {
-    loadAppointment();
-    loadDoctors();
-  }, [params.id]);
+    if (appointmentId) {
+      loadAppointment();
+      loadDoctors();
+    }
+  }, [appointmentId]);
 
   const loadAppointment = async () => {
+    if (!appointmentId) return;
+
     try {
       const { data, error } = await supabase
         .from("appointments")
@@ -63,7 +77,7 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
           *,
           patient:patients(full_name, medical_record_number)
         `)
-        .eq("id", params.id)
+        .eq("id", appointmentId)
         .single();
 
       if (error) throw error;
@@ -94,7 +108,7 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
 
   // Load booked slots when doctor or date changes
   const loadBookedSlots = useCallback(async () => {
-    if (!doctorId || !date) return;
+    if (!doctorId || !date || !appointmentId) return;
 
     const dateStr = date.toISOString().split('T')[0];
 
@@ -108,13 +122,13 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
     const slots = new Set<string>();
     data?.forEach((apt) => {
       // Don't mark current appointment slot as booked
-      if (apt.id !== params.id) {
+      if (apt.id !== appointmentId) {
         const timeStr = apt.appointment_time?.slice(0, 5);
         if (timeStr) slots.add(timeStr);
       }
     });
     setBookedSlots(slots);
-  }, [doctorId, date, params.id, supabase]);
+  }, [doctorId, date, appointmentId, supabase]);
 
   useEffect(() => {
     void loadBookedSlots();
@@ -144,7 +158,7 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
+    if (!validateForm() || !appointmentId) {
       return;
     }
 
@@ -161,12 +175,12 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
           appointment_time: `${time}:00`,
           notes: notes || null,
         })
-        .eq("id", params.id);
+        .eq("id", appointmentId);
 
       if (error) throw error;
 
       alert("Janji temu berhasil diperbarui");
-      router.push(`/appointments/${params.id}`);
+      router.push(`/appointments/${appointmentId}`);
     } catch (error: any) {
       console.error("Error updating appointment:", error);
       setErrors({ submit: error.message || "Gagal memperbarui janji temu" });
