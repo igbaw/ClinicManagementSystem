@@ -57,7 +57,6 @@ export default function ClinicCalendar({
   const [showSpinner, setShowSpinner] = useState(false);
   const fetchDebounceRef = useRef<NodeJS.Timeout | null>(null);
   const spinnerTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const [viewMode, setViewMode] = useState<"month" | "week">("month");
 
   // Generate calendar days
   const monthStart = startOfMonth(currentMonth);
@@ -103,7 +102,7 @@ export default function ClinicCalendar({
               appointment_time,
               status,
               patient:patients(full_name, medical_record_number),
-              doctor:users(full_name)
+              doctor:users!appointments_doctor_id_fkey(full_name)
             `)
             .gte("appointment_date", startDateStr)
             .lte("appointment_date", endDateStr)
@@ -148,7 +147,7 @@ export default function ClinicCalendar({
       if (fetchDebounceRef.current) clearTimeout(fetchDebounceRef.current);
       if (spinnerTimerRef.current) clearTimeout(spinnerTimerRef.current);
     };
-  }, [startDate, endDate, selectedDoctor, supabase]);
+  }, [currentMonth, selectedDoctor]);
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
@@ -210,26 +209,6 @@ export default function ClinicCalendar({
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setViewMode("month")}
-              className={`px-3 py-1 text-sm rounded-md ${
-                viewMode === "month" 
-                  ? "bg-blue-100 text-blue-700" 
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
-            >
-              Bulan
-            </button>
-            <button
-              onClick={() => setViewMode("week")}
-              className={`px-3 py-1 text-sm rounded-md ${
-                viewMode === "week" 
-                  ? "bg-blue-100 text-blue-700" 
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
-            >
-              Minggu
-            </button>
             <button
               onClick={() => setCurrentMonth(new Date())}
               className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-md"

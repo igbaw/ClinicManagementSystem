@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -60,8 +60,9 @@ interface AppointmentHistory {
   } | null;
 }
 
-export default function AppointmentDetailPage({ params }: { params: { id: string } }) {
+export default function AppointmentDetailPage() {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
   const supabase = createClient();
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [history, setHistory] = useState<AppointmentHistory[]>([]);
@@ -69,9 +70,10 @@ export default function AppointmentDetailPage({ params }: { params: { id: string
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   useEffect(() => {
+    if (!params?.id) return;
     loadAppointment();
     loadHistory();
-  }, [params.id]);
+  }, [params?.id]);
 
   const loadAppointment = async () => {
     try {

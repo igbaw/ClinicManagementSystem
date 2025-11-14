@@ -3,9 +3,6 @@
 -- Password: !Password.123
 -- This user will be auto-approved (email confirmed)
 
--- Ensure pgcrypto extension is enabled for password hashing
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
 -- Insert into auth.users (Supabase Auth table)
 -- Using a fixed UUID for reproducibility
 DO $$
@@ -19,6 +16,7 @@ BEGIN
     SELECT 1 FROM auth.users WHERE email = user_email
   ) THEN
     -- Insert the auth user with confirmed email
+    -- Using a simple hash approach that works with Supabase
     INSERT INTO auth.users (
       id,
       instance_id,
@@ -37,7 +35,7 @@ BEGIN
       user_id,
       '00000000-0000-0000-0000-000000000000', -- default instance_id
       user_email,
-      crypt(user_password, gen_salt('bf')), -- bcrypt hash
+      '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsxq9xqKS', -- pre-hashed bcrypt for '!Password.123'
       NOW(), -- auto-confirm email
       NOW(),
       NOW(),
@@ -50,23 +48,27 @@ BEGIN
     );
 
     -- Insert into public.users table with front_desk role
-    INSERT INTO public.users (
-      id,
-      full_name,
-      role,
-      phone,
-      is_active,
-      created_at,
-      updated_at
-    ) VALUES (
-      user_id,
-      'Front Desk User',
-      'front_desk',
-      '+62123456789',
-      true,
-      NOW(),
-      NOW()
-    );
+    IF NOT EXISTS (
+      SELECT 1 FROM public.users WHERE id = user_id
+    ) THEN
+      INSERT INTO public.users (
+        id,
+        full_name,
+        role,
+        phone,
+        is_active,
+        created_at,
+        updated_at
+      ) VALUES (
+        user_id,
+        'Front Desk User',
+        'front_desk',
+        '+62123456789',
+        true,
+        NOW(),
+        NOW()
+      );
+    END IF;
 
     RAISE NOTICE 'Default front desk user created successfully';
     RAISE NOTICE 'Email: %', user_email;
@@ -79,11 +81,11 @@ END $$;
 -- Create identities record for email auth (required by Supabase Auth)
 DO $$
 DECLARE
-  user_id uuid := '00000000-0000-0000-0000-000000000001';
-  user_email text := 'frontdesk@aionclinic.com';
+  v_user_id uuid := '00000000-0000-0000-0000-000000000001';
+  v_user_email text := 'frontdesk@aionclinic.com';
 BEGIN
   IF NOT EXISTS (
-    SELECT 1 FROM auth.identities WHERE user_id = user_id
+    SELECT 1 FROM auth.identities WHERE user_id = v_user_id
   ) THEN
     INSERT INTO auth.identities (
       id,
@@ -96,12 +98,12 @@ BEGIN
       updated_at
     ) VALUES (
       gen_random_uuid(),
-      user_id,
-      user_id::text,
+      v_user_id,
+      v_user_id::text,
       'email',
       json_build_object(
-        'sub', user_id::text,
-        'email', user_email,
+        'sub', v_user_id::text,
+        'email', v_user_email,
         'email_verified', true
       ),
       NOW(),

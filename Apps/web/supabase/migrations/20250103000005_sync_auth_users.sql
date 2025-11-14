@@ -19,14 +19,19 @@ WHERE NOT EXISTS (
 CREATE OR REPLACE FUNCTION create_user_on_signup()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.users (id, full_name, role, phone, is_active)
-  VALUES (
-    NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
-    COALESCE(NEW.raw_user_meta_data->>'role', 'doctor'),  -- Default to doctor
-    COALESCE(NEW.raw_user_meta_data->>'phone', ''),
-    true
-  );
+  -- Only create user if it doesn't already exist
+  IF NOT EXISTS (
+    SELECT 1 FROM public.users WHERE id = NEW.id
+  ) THEN
+    INSERT INTO public.users (id, full_name, role, phone, is_active)
+    VALUES (
+      NEW.id,
+      COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
+      COALESCE(NEW.raw_user_meta_data->>'role', 'doctor'),  -- Default to doctor
+      COALESCE(NEW.raw_user_meta_data->>'phone', ''),
+      true
+    );
+  END IF;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

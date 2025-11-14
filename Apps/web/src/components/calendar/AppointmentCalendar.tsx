@@ -10,7 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ClinicCalendar from "./ClinicCalendar";
 import Link from "next/link";
 import VitalSignsModal, { VitalSigns } from "../modals/VitalSignsModal";
-import { Calendar, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
 
 interface Appointment {
   id: string;
@@ -48,6 +49,7 @@ export default function AppointmentCalendar({
   const [loading, setLoading] = useState(false);
   const [showVitalSignsModal, setShowVitalSignsModal] = useState(false);
   const [selectedAppointmentForCheckIn, setSelectedAppointmentForCheckIn] = useState<Appointment | null>(null);
+  const [isCheckingIn, setIsCheckingIn] = useState(false);
 
   // Helper to safely access patient/doctor data
   const getPatient = (apt: Appointment) => Array.isArray(apt.patient) ? apt.patient[0] : apt.patient;
@@ -81,10 +83,13 @@ export default function AppointmentCalendar({
       
       if (error) {
         console.error("Error loading appointments:", error);
-        alert(`Gagal memuat janji temu: ${error.message}`);
+        toast({
+          title: "Gagal memuat janji temu",
+          description: error.message,
+          variant: "destructive",
+        });
         setSelectedDateAppointments([]);
       } else {
-        console.log("Loaded appointments:", data);
         setSelectedDateAppointments((data as unknown as Appointment[]) || []);
       }
     } catch (error) {
@@ -100,14 +105,24 @@ export default function AppointmentCalendar({
   }, [onAppointmentSelect]);
 
   const handleCheckInClick = (appointment: Appointment) => {
+    console.log("Check-in clicked for appointment", appointment.id, "booking_code=", appointment.booking_code);
     setSelectedAppointmentForCheckIn(appointment);
     setShowVitalSignsModal(true);
   };
 
   const checkInAppointment = async (vitalSigns: VitalSigns) => {
     if (!selectedAppointmentForCheckIn) return;
+    if (!selectedAppointmentForCheckIn.booking_code) {
+      toast({
+        title: "Tidak dapat check-in",
+        description: "Janji temu ini belum memiliki kode booking.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
+      setIsCheckingIn(true);
       const response = await fetch("/api/checkin/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -130,13 +145,27 @@ export default function AppointmentCalendar({
         if (selectedDate) {
           await handleDateSelect(selectedDate);
         }
+        toast({
+          title: "Check-in berhasil",
+          description: "Pasien telah masuk antrian.",
+        });
       } else {
         const result = await response.json();
-        alert(result.message || "Gagal check-in");
+        toast({
+          title: "Gagal check-in",
+          description: result.message || "Terjadi kesalahan saat check-in.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Check-in error:", error);
-      alert("Terjadi kesalahan saat check-in");
+      toast({
+        title: "Kesalahan jaringan",
+        description: "Terjadi kesalahan saat check-in. Silakan coba lagi.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCheckingIn(false);
     }
   };
 
@@ -272,6 +301,7 @@ export default function AppointmentCalendar({
         }}
         onSubmit={checkInAppointment}
         patientName={selectedAppointmentForCheckIn ? getPatient(selectedAppointmentForCheckIn)?.full_name || '' : ''}
+        isSubmitting={isCheckingIn}
       />
     </div>
   );
