@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import DatePicker from "@/components/calendar/DatePicker";
+import { useSatuSehatClinicalSubmit } from "@/lib/hooks/useSatuSehatClinicalSubmit";
+import { ClinicalDataStatusSection } from "@/components/satusehat/clinical-data-status-section";
+import { checkPrerequisites, validateMedicalRecordForSubmission } from "@/lib/api/satusehat/pre-submission-checks";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Patient {
   id: string;
@@ -23,14 +27,29 @@ export default function NewMedicalRecordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
+  const { toast } = useToast();
   const appointmentId = searchParams.get("appointment");
   const queueId = searchParams.get("queue");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [medicalRecordId, setMedicalRecordId] = useState<string | undefined>();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [queueEntry, setQueueEntry] = useState<any>(null);
   const [vitalSignsEditable, setVitalSignsEditable] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [clinic, setClinic] = useState<any>(null);
+
+  const {
+    submitClinicalData,
+    overallStatus,
+    encounter,
+    conditions,
+    observations,
+  } = useSatuSehatClinicalSubmit({
+    medicalRecordId,
+    autoSubmit: true,
+  });
 
   // Form state - Vital Signs
   const [bloodPressure, setBloodPressure] = useState("");
@@ -61,8 +80,26 @@ export default function NewMedicalRecordPage() {
 
   // Load appointment/queue and patient data
   useEffect(() => {
-    if (queueId) {
-      (async () => {
+    (async () => {
+      try {
+        // Load current user and clinic info
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setCurrentUser(user);
+          const { data: userData } = await supabase
+            .from('users')
+            .select('satusehat_organization_id')
+            .eq('id', user.id)
+            .single();
+          if (userData?.satusehat_organization_id) {
+            setClinic({ satusehat_organization_id: userData.satusehat_organization_id });
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user/clinic:', error);
+      }
+
+      if (queueId) {
         const { data: existingRecord } = await supabase
           .from("medical_records")
           .select("id")
@@ -80,7 +117,7 @@ export default function NewMedicalRecordPage() {
           .from("queue_entries")
           .select(`
             id, entry_type, chief_complaint, appointment_id,
-            patient:patients(id, medical_record_number, full_name, date_of_birth, gender),
+            patient:patients(id, medical_record_number, full_name, date_of_birth, gender, ihs_number),
             appointment:appointments(id, appointment_time, booking_code)
           `)
           .eq("id", queueId)
@@ -101,9 +138,7 @@ export default function NewMedicalRecordPage() {
           setErrors({ submit: "Queue entry tidak ditemukan." });
         }
         setLoading(false);
-      })();
-    } else if (appointmentId) {
-      (async () => {
+      } else if (appointmentId) {
         const { data: existingRecord } = await supabase
           .from("medical_records")
           .select("id")
@@ -119,17 +154,17 @@ export default function NewMedicalRecordPage() {
 
         const { data } = await supabase
           .from("appointments")
-          .select(`*, patient:patients(id, medical_record_number, full_name, date_of_birth, gender)`)
+          .select(`*, patient:patients(id, medical_record_number, full_name, date_of_birth, gender, ihs_number)`)
           .eq("id", appointmentId)
           .single();
 
         if (data?.patient) setPatient(data.patient as Patient);
         setLoading(false);
-      })();
-    } else {
-      setLoading(false);
-    }
-  }, [appointmentId, queueId, supabase, router]);
+      } else {
+        setLoading(false);
+      }
+    })();
+  }, [appointmentId, queueId, supabase]);
 
   const searchICD10 = async (query: string) => {
     if (query.length < 2) {
@@ -211,6 +246,23 @@ export default function NewMedicalRecordPage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+
+    // Check prerequisites for SatuSehat submission
+    const { canSubmit, missing } = checkPrerequisites({
+      patientIhsNumber: patient?.ihs_number,
+      doctorId: currentUser?.id,
+      organizationId: clinic?.satusehat_organization_id,
+    });
+
+    if (!canSubmit) {
+      const missingMessage = missing.join('\n');
+      toast({
+        title: 'Tidak bisa mengirim ke SatuSehat',
+        description: `Penuhi persyaratan: ${missingMessage}`,
+        variant: 'destructive',
+      });
+    }
+
     setSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -239,6 +291,9 @@ export default function NewMedicalRecordPage() {
       const { data, error } = await supabase.from("medical_records").insert(payload).select().single();
       if (error) throw error;
 
+      // Trigger SatuSehat submission
+      setMedicalRecordId(data.id);
+
       if (attachments.length > 0 && data) {
         const uploadedUrls = await uploadAttachments(data.id);
         await supabase.from("medical_records").update({ attachments: uploadedUrls }).eq("id", data.id);
@@ -249,8 +304,15 @@ export default function NewMedicalRecordPage() {
         await supabase.from("appointments").update({ status: "completed" }).eq("id", appointmentId || queueEntry?.appointment_id);
       }
 
-      setSuccessMessage("Rekam medis berhasil disimpan!");
-      setTimeout(() => router.push(`/queue?success=true`), 1500);
+      setSuccessMessage("Rekam medis berhasil disimpan! Proses sinkronisasi dengan SatuSehat sedang berlangsung...");
+
+      if (canSubmit) {
+        toast({
+          description: 'Data sedang dikirim ke SatuSehat...',
+        });
+      }
+
+      setTimeout(() => router.push(`/queue?success=true`), 3000);
     } catch (error: any) {
       console.error('Error saving:', error);
       setErrors({ submit: `Gagal menyimpan: ${error.message || 'Terjadi kesalahan'}` });
@@ -681,6 +743,26 @@ export default function NewMedicalRecordPage() {
           </div>
         </div>
       </div>
+
+      {/* SatuSehat Clinical Data Status Display */}
+      {medicalRecordId && (
+        <div className="bg-white border rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Status Pengiriman ke SatuSehat</h3>
+          <ClinicalDataStatusSection
+            status={{
+              status: overallStatus,
+              encounter,
+              conditions,
+              observations,
+            }}
+            onRetry={() => submitClinicalData()}
+            showDetails={false}
+          />
+          <p className="text-xs text-gray-600 mt-4">
+            Sistem sedang mengirim data rekam medis (Encounter, Diagnosis, Vital Signs) ke platform SatuSehat nasional untuk integrasi dengan sistem kesehatan Indonesia. Proses ini berlangsung di background dan dapat memakan waktu beberapa menit.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

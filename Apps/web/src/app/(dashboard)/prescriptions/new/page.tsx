@@ -3,33 +3,39 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SubmissionStatusSection } from "@/components/satusehat/submission-status-section";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function NewPrescriptionPage() {
   const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
+  const { toast } = useToast();
   const sp = useSearchParams();
   const medicalRecordId = sp.get('mrId') || "";
   const patientId = sp.get('patientId') || "";
 
   const [medQuery, setMedQuery] = useState("");
   type Medication = { id: string; name: string; unit: string; selling_price: number; stock_quantity: number; minimum_stock: number };
-  type RxItem = { 
-  medication_id: string; 
-  medication_name: string; 
-  dosage: string; 
-  frequency: string; 
-  timing: string; 
-  duration: string; 
-  quantity: number; 
-  price: number; 
-  stock_quantity: number; 
-  unit: string; 
+  type RxItem = {
+  medication_id: string;
+  medication_name: string;
+  dosage: string;
+  frequency: string;
+  timing: string;
+  duration: string;
+  quantity: number;
+  price: number;
+  stock_quantity: number;
+  unit: string;
   instructions: string;
   isAutoCalculated?: boolean;
 };
   const [medResults, setMedResults] = useState<Medication[]>([]);
   const [items, setItems] = useState<RxItem[]>([]);
   const [notes, setNotes] = useState("");
+  const [prescriptionId, setPrescriptionId] = useState<string | null>(null);
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   const searchMeds = useCallback(async () => {
     if (medQuery.trim().length < 2) { setMedResults([]); return; }
@@ -112,48 +118,103 @@ export default function NewPrescriptionPage() {
   }
 
   async function savePrescription() {
-    const { data: userRes } = await supabase.auth.getUser();
-    const doctorId = userRes?.user?.id;
-    
-    // Create prescription
-    const { data: pres, error } = await supabase
-      .from('prescriptions')
-      .insert({ medical_record_id: medicalRecordId, patient_id: patientId, doctor_id: doctorId, status: 'pending', notes })
-      .select('id')
-      .single();
-    if (error) return;
+    setIsSaving(true);
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const doctorId = userRes?.user?.id;
 
-    // Insert prescription items
-    const payload = items.map((it) => ({
-      prescription_id: pres.id,
-      medication_id: it.medication_id,
-      dosage: it.dosage || '-',
-      frequency: it.frequency,
-      timing: it.timing,
-      duration: it.duration,
-      quantity: it.quantity,
-      instructions: it.instructions || '',
-      price: it.price || 0,
-    }));
-    await supabase.from('prescription_items').insert(payload);
-
-    // Update appointment status to completed
-    if (medicalRecordId) {
-      const { data: medicalRecord } = await supabase
-        .from('medical_records')
-        .select('appointment_id')
-        .eq('id', medicalRecordId)
+      // Create prescription
+      const { data: pres, error } = await supabase
+        .from('prescriptions')
+        .insert({ medical_record_id: medicalRecordId, patient_id: patientId, doctor_id: doctorId, status: 'pending', notes })
+        .select('id')
         .single();
-      
-      if (medicalRecord?.appointment_id) {
-        await supabase
-          .from('appointments')
-          .update({ status: 'completed' })
-          .eq('id', medicalRecord.appointment_id);
-      }
-    }
+      if (error) throw error;
 
-    router.push(`/prescriptions?success=true`);
+      // Insert prescription items
+      const payload = items.map((it) => ({
+        prescription_id: pres.id,
+        medication_id: it.medication_id,
+        dosage: it.dosage || '-',
+        frequency: it.frequency,
+        timing: it.timing,
+        duration: it.duration,
+        quantity: it.quantity,
+        instructions: it.instructions || '',
+        price: it.price || 0,
+      }));
+      await supabase.from('prescription_items').insert(payload);
+
+      // Update appointment status to completed
+      if (medicalRecordId) {
+        const { data: medicalRecord } = await supabase
+          .from('medical_records')
+          .select('appointment_id')
+          .eq('id', medicalRecordId)
+          .single();
+
+        if (medicalRecord?.appointment_id) {
+          await supabase
+            .from('appointments')
+            .update({ status: 'completed' })
+            .eq('id', medicalRecord.appointment_id);
+        }
+      }
+
+      // Submit to SatuSehat
+      setPrescriptionId(pres.id);
+      const submissionIds = [];
+
+      for (const med of items) {
+        try {
+          const response = await fetch('/api/satusehat/medication-request/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prescriptionId: pres.id,
+              medicalRecordId: medicalRecordId,
+              medication: {
+                medicationId: med.medication_id,
+                name: med.medication_name,
+                dosage: med.dosage,
+                frequency: med.frequency,
+                timing: med.timing,
+                duration: med.duration,
+                quantity: med.quantity,
+                unit: med.unit,
+              },
+            }),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            submissionIds.push(result.submissionId);
+          }
+        } catch (error) {
+          console.error('Failed to submit medication to SatuSehat:', error);
+        }
+      }
+
+      if (submissionIds.length > 0) {
+        setSubmissions(submissionIds.map(id => ({ id, status: 'pending' })));
+        toast({
+          description: `Resep disimpan. ${submissionIds.length} obat sedang dikirim ke SatuSehat...`,
+        });
+      }
+
+      setTimeout(() => {
+        router.push(`/prescriptions?success=true`);
+      }, 2000);
+    } catch (error: any) {
+      console.error('Error saving prescription:', error);
+      toast({
+        title: 'Error',
+        description: `Gagal menyimpan resep: ${error.message}`,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -319,20 +380,43 @@ export default function NewPrescriptionPage() {
       )}
 
       <div className="flex gap-3">
-        <button 
-          onClick={savePrescription} 
-          disabled={items.length === 0}
+        <button
+          onClick={savePrescription}
+          disabled={items.length === 0 || isSaving}
           className="rounded-md bg-blue-600 text-white px-6 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Simpan Resep
+          {isSaving ? 'Menyimpan...' : 'Simpan Resep'}
         </button>
-        <button 
-          onClick={() => router.back()} 
+        <button
+          onClick={() => router.back()}
           className="rounded-md bg-gray-200 text-gray-700 px-6 py-2"
         >
           Batal
         </button>
       </div>
+
+      {/* SatuSehat Submission Status */}
+      {prescriptionId && submissions.length > 0 && (
+        <div className="bg-white border rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Status Pengiriman ke SatuSehat</h3>
+          <SubmissionStatusSection
+            submissions={submissions}
+            title="Obat yang Dikirim"
+            description="Status pengiriman obat ke platform SatuSehat"
+            isLoading={false}
+            onRetry={(submissionId: string) => {
+              fetch('/api/satusehat/submission/retry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ submissionId }),
+              }).catch(error => console.error('Retry failed:', error));
+            }}
+          />
+          <p className="text-xs text-gray-600 mt-4">
+            Data obat dari resep ini sedang dikirim ke platform SatuSehat nasional. Proses sinkronisasi dapat memakan waktu beberapa menit.
+          </p>
+        </div>
+      )}
 
       <style jsx global>{`
         .input { @apply w-full px-3 py-2 border rounded-md; }
