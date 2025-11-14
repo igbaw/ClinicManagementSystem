@@ -38,20 +38,20 @@ export default function Header() {
   const displayRole = role ? getRoleDisplayName(role) : '...';
 
   return (
-    <header className="h-16 flex items-center justify-between border-b border-gray-200/50 bg-white/95 backdrop-blur-sm px-6 shadow-sm">
+    <header className="h-16 flex items-center justify-between border-b border-slate-200/60 bg-white/95 backdrop-blur-sm px-6">
       {/* Page Title */}
       <div>
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-primary-900 bg-clip-text text-transparent">
+        <h2 className="text-2xl font-semibold text-slate-900 tracking-tight">
           {pageTitle}
         </h2>
-        <p className="text-sm text-gray-500">Selamat datang di sistem manajemen klinik</p>
+        <p className="text-sm text-slate-500">Selamat datang di sistem manajemen klinik</p>
       </div>
 
       {/* Actions */}
       <div className="flex items-center gap-4">
         {/* Notifications */}
-        <button className="relative p-2 rounded-md hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all duration-200">
-          <Bell className="h-5 w-5 text-gray-600" />
+        <button className="relative p-2 rounded-md hover:bg-slate-100 transition-colors duration-150">
+          <Bell className="h-5 w-5 text-slate-600" />
           <Badge 
             variant="error" 
             className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center animate-pulse"
@@ -61,15 +61,15 @@ export default function Header() {
         </button>
 
         {/* User Menu */}
-        <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
+        <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-slate-900">
               {loading ? 'Memuat...' : displayName}
             </p>
-            <p className="text-xs text-gray-500">{displayRole}</p>
+            <p className="text-xs text-slate-500">{displayRole}</p>
           </div>
-          <button className="p-2 rounded-full bg-gradient-to-br from-primary-100 to-secondary-100 hover:from-primary-200 hover:to-secondary-200 transition-all duration-200 shadow-sm">
-            <User className="h-5 w-5 text-primary-700" />
+          <button className="p-2 rounded-full border border-emerald-100 bg-emerald-50 hover:bg-emerald-100 transition-colors duration-150">
+            <User className="h-5 w-5 text-emerald-700" />
           </button>
         </div>
 

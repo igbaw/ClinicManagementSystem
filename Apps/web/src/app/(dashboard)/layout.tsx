@@ -48,9 +48,9 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="h-screen w-full grid grid-cols-[16rem_1fr] bg-gradient-to-br from-gray-50 via-primary-50/30 to-secondary-50/20">
+    <div className="min-h-screen w-full grid grid-cols-[16rem_1fr] bg-gradient-to-br from-gray-50 via-primary-50/30 to-secondary-50/20">
       <Sidebar />
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-1 overflow-auto p-6">
           <div className="animate-fade-in">

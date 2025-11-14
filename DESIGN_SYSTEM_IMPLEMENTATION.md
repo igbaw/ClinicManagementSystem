@@ -1,5 +1,69 @@
 # Design System Implementation Summary - shadcn/ui + Vercel Design Principles
 
+## Design System Overview
+
+### 1. Design principles
+
+- **Simplicity**  
+  Keep screens clean, with clear hierarchy and generous whitespace. Avoid unnecessary borders and decoration.
+
+- **Consistency**  
+  Always use shared components (Button, Input, Table, Card, Badge) instead of custom styling in pages.
+
+- **Clarity**  
+  Each screen should have one clear primary action. Secondary and destructive actions must look visually distinct.
+
+- **Accessibility**  
+  Preserve focus rings, readable contrast, semantic HTML, and keyboard navigation on all new UI.
+
+---
+
+### 2. Core tokens
+
+- **Font**  
+  - Family: `Inter` (Google Fonts)  
+  - Hierarchy: `h1` / `h2` / `h3` / body / small  
+  - Use Tailwind heading utilities or existing CSS heading styles.
+
+- **Colors**  
+  - Primary: blue (`--primary`) – main action/highlight color  
+  - Secondary: cyan (`--secondary`) – secondary accents  
+  - Semantic: `--destructive` for errors, plus success/warning tokens  
+  - Neutral: background, muted, border as defined in `globals.css`
+
+- **Spacing**  
+  - Base grid: 4px  
+  - Common patterns:  
+    - Vertical: `space-y-2`, `space-y-4`, `space-y-6`  
+    - Gaps: `gap-2`, `gap-4`, `gap-6`  
+    - Containers: `p-4` or `p-6` for cards and main sections
+
+---
+
+### 3. Component rules
+
+- **Buttons**  
+  - Always use the `Button` component.  
+  - Primary action: `variant="primary"` (one per main area).  
+  - Secondary actions: `variant="secondary"` or `variant="ghost"`.  
+  - Destructive: `variant="danger"` and clearly labeled.  
+  - Use `asChild` when wrapping `Link`.
+
+- **Forms**  
+  - Pattern: `Label` + `Input`/`Textarea` + error text.  
+  - Group fields with `space-y-2` or `grid` layouts, not ad-hoc margins.  
+  - Errors use `text-destructive` and clear messages.
+
+- **Tables & lists**  
+  - Always use the `Table` component for tabular data.  
+  - Use `Badge` for statuses (e.g. appointment/queue status).  
+  - Keep actions in the rightmost column as buttons.
+
+- **Layout**  
+  - Use `Card` for primary content blocks (forms, lists, summaries).  
+  - Each page should have a header: title + short description, optional primary action on the right.  
+  - Use the existing Sidebar + Header layout for dashboard pages.
+
 ## ✅ Completed Implementation (Updated November 2025)
 
 This document outlines the complete design system implementation using **shadcn/ui components** integrated with our custom Bali-inspired color palette, following **Vercel's design principles**.
@@ -194,36 +258,67 @@ Created professional, accessible components in `src/components/ui/`:
 
 ### 6. **Color System**
 
-#### Original Palette (Preserved)
+We use a **calm clinical palette** centered around emerald green, slate gray, and teal accent.
+
+#### Palette (Hex)
 ```css
-Primary (Navy Blue):   #3B82F6 → #1E3A8A
-Secondary (Turquoise): #06B6D4 → #164E63
-Success (Green):       #22C55E
-Warning (Amber):       #F59E0B
+Primary (Emerald):     #10B981
+Secondary (Slate):     #4B5563
+Accent (Teal):         #22C9B5
+Success (Green):       #16A34A
+Warning (Amber):       #FBBF24
 Error (Red):           #EF4444
+Background (Light):    #F3F4F6 / #FFFFFF
+Border (Light Gray):   #E5E7EB
+Heading Text:          #111827
+Body Text:             #4B5563
+Muted Text:            #6B7280
 ```
 
 #### shadcn HSL Variables (Integrated)
 ```css
---background: 0 0% 100% (White)
---foreground: 222.2 84% 4.9% (Dark text)
---primary: 217.2 91.2% 59.8% (Blue - matches our primary)
---secondary: 186.2 94% 43.3% (Cyan - matches our secondary)
---destructive: 0 84.2% 60.2% (Red - for errors)
---muted: 210 40% 96.1% (Light gray - for secondary text)
---border: 214.3 31.8% 91.4% (Border color)
---input: 214.3 31.8% 91.4% (Input borders)
---ring: 217.2 91.2% 59.8% (Focus ring)
+--background: 210 40% 98%;          /* #F3F4F6 */
+--foreground: 222 47% 11%;          /* #111827 */
+
+--primary: 160 84% 39%;             /* #10B981 */
+--primary-foreground: 0 0% 100%;    /* white text */
+
+--secondary: 220 9% 46%;            /* #4B5563 */
+--secondary-foreground: 0 0% 100%;
+
+--accent: 172 70% 45%;              /* #22C9B5 */
+--accent-foreground: 0 0% 100%;
+
+--destructive: 0 84% 60%;           /* #EF4444 */
+--destructive-foreground: 0 0% 100%;
+
+--muted: 210 40% 96.1%;             /* light gray */
+--muted-foreground: 215 16% 47%;    /* #6B7280 */
+
+--border: 214.3 31.8% 91.4%;        /* #E5E7EB */
+--input: 214.3 31.8% 91.4%;
+--ring: 160 84% 39%;                /* match primary */
 ```
 
+**Usage**
+- Use **primary** for main CTAs and key highlights.
+- Use **secondary** for secondary buttons and navigation elements.
+- Use **accent** for chips, tags, small highlights, and stats.
+- Use **destructive** strictly for error/destructive actions.
+
 **Why HSL?**
-- Easy to create hover/active states (adjust lightness)
-- Better for dynamic theming (dark mode)
-- shadcn/ui standard format
+- Easy to create hover/active states (adjust lightness).
+- Better for dynamic theming (dark mode).
+- Matches shadcn/ui standard format.
 
 ### 7. **Typography**
-- **Font**: Inter (Google Fonts) - Modern, readable, professional
-- **Hierarchy**: h1 (3xl) → h2 (2xl) → h3 (xl) → body (base) → small (sm)
+- **Font**: Nunito Sans (Google Fonts) – Soft, friendly, and highly readable for clinical UIs.
+- **Weights**: 400 (body), 500 (labels), 600–700 (headings).
+- **Hierarchy**: h1 (≈3xl) → h2 (≈2xl) → h3 (≈xl) → body (base) → small (sm).
+- **Usage**:
+  - Headings: `font-semibold` or `font-bold` (600–700).
+  - Body: `font-normal` (400).
+  - Emphasis / labels: `font-medium` (500).
 - **Weights**: 300 (light), 400 (normal), 500 (medium), 600 (semibold), 700 (bold)
 - **Anti-aliasing**: Enabled for smooth rendering
 

@@ -2,12 +2,12 @@
 -- This ensures all authenticated users have a role
 
 -- Insert any auth users that don't exist in users table yet
--- Default to 'doctor' role (you can change this to 'admin' or 'front_desk' as needed)
+-- Default to 'front_desk' role (you can change this to 'admin' or 'doctor' as needed)
 INSERT INTO users (id, full_name, role, phone, is_active)
 SELECT 
   au.id,
   COALESCE(au.raw_user_meta_data->>'full_name', au.email) as full_name,
-  'doctor' as role,  -- Default role (change to 'admin' if needed)
+  'front_desk' as role,  -- Default role (change to 'admin' or 'doctor' if needed)
   COALESCE(au.raw_user_meta_data->>'phone', '') as phone,
   true as is_active
 FROM auth.users au
@@ -27,7 +27,7 @@ BEGIN
     VALUES (
       NEW.id,
       COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email),
-      COALESCE(NEW.raw_user_meta_data->>'role', 'doctor'),  -- Default to doctor
+      COALESCE(NEW.raw_user_meta_data->>'role', 'front_desk'),  -- Default to front_desk
       COALESCE(NEW.raw_user_meta_data->>'phone', ''),
       true
     );
