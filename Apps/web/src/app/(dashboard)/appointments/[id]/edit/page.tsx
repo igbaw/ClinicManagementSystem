@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import DatePicker from "@/components/calendar/DatePicker";
+import { DatePicker } from "@/components/ui/date-picker";
+import { TimeSelect } from "@/components/ui/time-select";
 import { generateTimeSlots, getClinicHoursString } from "@/config/clinic";
 import { ArrowLeft, Calendar, Clock, User, Save } from "lucide-react";
 
@@ -267,6 +268,7 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
                     <DatePicker
                       value={date}
                       onChange={(newDate) => {
+                        if (!newDate) return;
                         setDate(newDate);
                         setErrors({ ...errors, date: "" });
                       }}
@@ -282,29 +284,16 @@ export default function EditAppointmentPage({ params }: { params: { id: string }
                   {/* Time Selection */}
                   <div className="space-y-2">
                     <Label htmlFor="time">Waktu *</Label>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <select
-                        id="time"
-                        value={time}
-                        onChange={(e) => {
-                          setTime(e.target.value);
-                          setErrors({ ...errors, time: "" });
-                        }}
-                        className="w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                      >
-                        <option value="">Pilih Waktu</option>
-                        {slots.map((slot) => (
-                          <option
-                            key={slot}
-                            value={slot}
-                            disabled={bookedSlots.has(slot)}
-                          >
-                            {slot} {bookedSlots.has(slot) ? "(Terisi)" : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <TimeSelect
+                      value={time}
+                      onChange={(value) => {
+                        setTime(value);
+                        setErrors({ ...errors, time: "" });
+                      }}
+                      slots={slots}
+                      disabledSlots={bookedSlots}
+                      placeholder="Pilih Waktu"
+                    />
                     {errors.time && (
                       <p className="text-sm text-destructive">{errors.time}</p>
                     )}

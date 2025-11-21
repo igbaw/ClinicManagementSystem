@@ -1,0 +1,31 @@
+src/lib/services/bpjs-claim-builder.ts(253,9): error TS2561: Object literal may only specify known properties, but 'value' does not exist in type '{ category: { coding?: { system?: string | undefined; code: string; display?: string | undefined; }[] | undefined; text?: string | undefined; }; amount: { value: number; currency?: string | undefined; }; }[]'. Did you mean to write 'values'?
+src/lib/services/bpjs-claim-builder.ts(274,7): error TS2322: Type '"error" | "cancelled" | "active"' is not assignable to type '"cancelled" | "draft" | "entered-in-error" | "active"'.
+  Type '"error"' is not assignable to type '"cancelled" | "draft" | "entered-in-error" | "active"'.
+src/lib/services/bpjs-claim-builder.ts(389,37): error TS2551: Property 'value' does not exist on type '{ category: { coding?: { system?: string | undefined; code: string; display?: string | undefined; }[] | undefined; text?: string | undefined; }; amount: { value: number; currency?: string | undefined; }; }[]'. Did you mean 'values'?
+src/lib/services/invoice-builder.ts(295,9): error TS2353: Object literal may only specify known properties, and 'factor' does not exist in type '{ type: "base" | "surcharge" | "deduction" | "discount" | "tax" | "informational"; code?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; amount?: { ...; } | undefined; }'.
+src/lib/services/invoice-builder.ts(317,9): error TS2353: Object literal may only specify known properties, and 'factor' does not exist in type '{ type: "base" | "surcharge" | "deduction" | "discount" | "tax" | "informational"; code?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; amount?: { ...; } | undefined; }'.
+src/lib/services/invoice-pdf-generator.ts(140,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(146,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(169,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(173,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(203,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(208,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(235,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(248,19): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(251,19): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(269,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(287,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(351,21): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(354,21): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(375,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(380,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(413,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(417,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(434,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(441,26): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/lib/services/invoice-pdf-generator.ts(500,25): error TS2339: Property 'description' does not exist on type '{ sequence?: number | undefined; chargeItemReference?: { reference: string; display?: string | undefined; } | undefined; chargeItemCodeableConcept?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; priceCompo...'.
+src/lib/services/invoice-pdf-generator.ts(501,22): error TS2339: Property 'quantity' does not exist on type '{ sequence?: number | undefined; chargeItemReference?: { reference: string; display?: string | undefined; } | undefined; chargeItemCodeableConcept?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; priceCompo...'.
+src/lib/services/invoice-pdf-generator.ts(507,73): error TS2367: This comparison appears to be unintentional because the types '"base" | "surcharge" | "deduction" | "discount" | "tax" | "informational"' and '"total"' have no overlap.
+src/lib/services/invoice-pdf-generator.ts(512,34): error TS2339: Property 'number' does not exist on type 'FhirInvoice'.
+src/lib/services/invoice-pdf-generator.ts(514,28): error TS2339: Property 'dueDate' does not exist on type 'FhirInvoice'.
+src/lib/services/invoice-pdf-generator.ts(529,29): error TS2339: Property 'currency' does not exist on type 'FhirInvoice'.

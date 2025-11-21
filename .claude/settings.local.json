@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:daypicker.dev)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Implement Phase 3 - Invoice PDF Generation & Supabase Storage\n\n## Summary\nComplete implementation of invoice PDF generation and storage integration:\n\n### Phase 3A: Invoice PDF Generation (600 lines)\n- InvoicePdfGenerator service for professional PDF invoicing\n- Support for FHIR Invoice to PDF conversion\n- Professional layout with clinic/patient info, line items, financial summary\n- Indonesian compliance (0% tax, IDR currency)\n- Multi-page support with audit footer\n- 10-year retention notice per Law No. 8/1997\n\n### Phase 3B: Supabase Storage Integration (500 lines)\n- InvoiceStorageService for PDF management\n- Automatic file organization by year/patient\n- 10-year retention tracking\n- Complete audit logging (IP, user-agent, purpose)\n- Access count and last accessed timestamp\n- Generate secure download URLs with expiration\n- Archive (never hard-delete) for compliance\n\n### API Endpoints (350 lines)\n- POST /api/billing/generate-pdf: Generate and store invoice PDFs\n- GET /api/billing/generate-pdf: Download/preview stored PDFs\n- Comprehensive error handling and validation\n- Access logging integration\n\n### UI Components (300 lines)\n- InvoicePdfActions component with download/preview\n- InvoiceDocumentList component for stored documents\n- useInvoicePdf React hook for client-side PDF management\n- Compact and default UI variants\n- Loading and error states\n\n### Database\n- invoice_documents table (17 columns, 8 indexes)\n- billing_access_logs table (20 columns, 10 indexes)\n- RLS policies for security\n- PL/pgSQL functions for automation\n\n### Documentation\n- PHASE3_COMPLETION_SUMMARY.md (implementation details)\n- PHASE5A_TESTING_GUIDE.md (8 test scenarios with procedures)\n\n### Dependencies\n- Added: html2canvas@^1.4.1 (PDF canvas conversion)\n- Used: jspdf@^3.0.3 (already installed)\n\n## Compliance\n✅ Law No. 8/1997: 10-year invoice retention\n✅ PDP Law No. 27/2022: Personal data protection\n✅ Health Law No. 17/2023: Medical record confidentiality\n✅ FHIR R4: Invoice resource specification\n✅ Indonesian healthcare standards\n\n## Quality\n- Full TypeScript with strict mode\n- No `any` types\n- Comprehensive error handling\n- Well-documented with JSDoc\n- Follows CLAUDE.md patterns\n- Enterprise-grade security\n\n## Testing\n- PHASE5A_TESTING_GUIDE.md created with:\n  - 8 detailed test scenarios\n  - Setup instructions\n  - Expected results\n  - Performance testing procedures\n  - Error handling tests\n\n## Next Steps\n1. Apply database migration\n2. Run Phase 5A test suite\n3. Proceed to Phase 5B (SatuSehat sandbox testing)\n\n🤖 Generated with Claude Code\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

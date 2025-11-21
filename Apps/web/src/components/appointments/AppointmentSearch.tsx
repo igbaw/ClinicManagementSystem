@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import DatePicker from "@/components/calendar/DatePicker";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Search, X, Calendar, Filter } from "lucide-react";
 
 export interface AppointmentSearchFilters {
@@ -178,8 +178,8 @@ export default function AppointmentSearch({ onSearch, doctors }: AppointmentSear
             <div className="space-y-2">
               <Label htmlFor="date-from">Dari Tanggal</Label>
               <DatePicker
-                value={dateFrom || new Date()}
-                onChange={(date) => setDateFrom(date)}
+                value={dateFrom || undefined}
+                onChange={(date) => setDateFrom(date ?? null)}
                 placeholder="Pilih tanggal awal"
                 className="w-full"
               />
@@ -188,8 +188,8 @@ export default function AppointmentSearch({ onSearch, doctors }: AppointmentSear
             <div className="space-y-2">
               <Label htmlFor="date-to">Sampai Tanggal</Label>
               <DatePicker
-                value={dateTo || new Date()}
-                onChange={(date) => setDateTo(date)}
+                value={dateTo || undefined}
+                onChange={(date) => setDateTo(date ?? null)}
                 placeholder="Pilih tanggal akhir"
                 className="w-full"
               />

@@ -1,0 +1,261 @@
+src/lib/api/satusehat/__tests__/client.test.ts(5,16): error TS2304: Cannot find name 'jest'.
+src/lib/api/satusehat/__tests__/client.test.ts(7,1): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/client.test.ts(10,5): error TS2304: Cannot find name 'beforeEach'.
+src/lib/api/satusehat/__tests__/client.test.ts(11,9): error TS2304: Cannot find name 'jest'.
+src/lib/api/satusehat/__tests__/client.test.ts(14,26): error TS2503: Cannot find namespace 'jest'.
+src/lib/api/satusehat/__tests__/client.test.ts(14,57): error TS7006: Parameter 'url' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/client.test.ts(28,5): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/client.test.ts(29,9): error TS2582: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/client.test.ts(30,30): error TS2503: Cannot find namespace 'jest'.
+src/lib/api/satusehat/__tests__/client.test.ts(30,65): error TS7006: Parameter 'url' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/client.test.ts(45,19): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/client.test.ts(50,9): error TS2582: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/client.test.ts(51,30): error TS2503: Cannot find namespace 'jest'.
+src/lib/api/satusehat/__tests__/client.test.ts(51,65): error TS7006: Parameter 'url' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/client.test.ts(66,19): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/client.test.ts(71,9): error TS2582: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/client.test.ts(83,30): error TS2503: Cannot find namespace 'jest'.
+src/lib/api/satusehat/__tests__/client.test.ts(83,65): error TS7006: Parameter 'url' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/client.test.ts(98,19): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/client.test.ts(103,9): error TS2582: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/client.test.ts(104,30): error TS2503: Cannot find namespace 'jest'.
+src/lib/api/satusehat/__tests__/client.test.ts(104,65): error TS7006: Parameter 'url' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/client.test.ts(119,19): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(9,3): error TS2459: Module '"../pre-submission-checks"' declares 'validateVitalSigns' locally, but it is not exported.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(13,1): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(14,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(15,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(23,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(24,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(27,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(35,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(36,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(39,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(47,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(48,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(51,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(59,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(62,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(70,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(71,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(74,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(82,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(83,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(86,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(98,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(101,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(117,9): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(121,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(136,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(137,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(140,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(148,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(152,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(153,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(162,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(163,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(166,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(175,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(175,35): error TS7006: Parameter 'w' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(178,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(187,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(190,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(199,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(199,35): error TS7006: Parameter 'w' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(202,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(211,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(211,35): error TS7006: Parameter 'w' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(214,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(223,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(223,35): error TS7006: Parameter 'w' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(226,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(235,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(235,35): error TS7006: Parameter 'w' implicitly has an 'any' type.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(238,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(246,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(249,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(258,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(261,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(270,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(274,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(275,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(280,23): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type '{ icd10_code?: string | undefined; diagnosis_text?: string | undefined; }'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(284,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(287,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(292,23): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type '{ icd10_code?: string | undefined; diagnosis_text?: string | undefined; }'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(296,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(297,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(300,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(305,23): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type '{ icd10_code?: string | undefined; diagnosis_text?: string | undefined; }'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(309,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(310,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(313,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(318,23): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type '{ icd10_code?: string | undefined; diagnosis_text?: string | undefined; }'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(322,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(325,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(334,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(337,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(343,13): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type '{ icd10_code?: string | undefined; diagnosis_text?: string | undefined; }'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(344,13): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type '{ icd10_code?: string | undefined; diagnosis_text?: string | undefined; }'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(349,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(352,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(357,23): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type '{ icd10_code?: string | undefined; diagnosis_text?: string | undefined; }'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(361,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(365,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(366,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(373,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(374,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(377,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(384,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(385,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(388,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(395,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(396,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(399,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(406,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(407,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(410,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(417,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(418,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(421,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(428,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(429,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(433,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(434,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(442,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(444,9): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(445,9): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(449,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(457,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(461,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(462,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(470,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(473,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(481,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(484,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(492,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(495,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(505,7): error TS2304: Cannot find name 'expect'.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(508,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/api/satusehat/__tests__/pre-submission-checks.test.ts(516,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(6,42): error TS2307: Cannot find module '@testing-library/react' or its corresponding type declarations.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(9,1): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(10,3): error TS2304: Cannot find name 'beforeEach'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(11,5): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(12,5): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(15,3): error TS2304: Cannot find name 'afterEach'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(16,5): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(17,5): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(20,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(21,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(24,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(25,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(26,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(29,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(34,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(35,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(36,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(37,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(38,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(39,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(43,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(44,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(46,12): error TS7031: Binding element 'patientId' implicitly has an 'any' type.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(50,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(55,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(59,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(65,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(68,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(70,12): error TS7031: Binding element 'patientId' implicitly has an 'any' type.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(80,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(85,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(86,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(91,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(98,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(102,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(112,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(117,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(118,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(125,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(129,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(135,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(142,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(145,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(149,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(151,24): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(162,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(163,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(166,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(167,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(173,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(174,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(175,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(184,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(188,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(189,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(202,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(206,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(207,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(216,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(220,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(224,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(240,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(241,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(242,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(247,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(248,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(255,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(259,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(264,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(269,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(270,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(275,32): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(280,7): error TS2304: Cannot find name 'jest'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(284,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(286,12): error TS7031: Binding element 'patientId' implicitly has an 'any' type.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(299,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(300,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(312,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(315,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(317,12): error TS7031: Binding element 'patientId' implicitly has an 'any' type.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(327,9): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(332,3): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(333,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(339,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(342,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(347,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(350,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(356,7): error TS2304: Cannot find name 'expect'.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(359,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/lib/hooks/__tests__/useSatuSehatSync.test.ts(365,7): error TS2304: Cannot find name 'expect'.
+src/lib/services/bpjs-claim-builder.ts(253,9): error TS2561: Object literal may only specify known properties, but 'value' does not exist in type '{ category: { coding?: { system?: string | undefined; code: string; display?: string | undefined; }[] | undefined; text?: string | undefined; }; amount: { value: number; currency?: string | undefined; }; }[]'. Did you mean to write 'values'?
+src/lib/services/bpjs-claim-builder.ts(274,7): error TS2322: Type '"error" | "cancelled" | "active"' is not assignable to type '"cancelled" | "draft" | "entered-in-error" | "active"'.
+  Type '"error"' is not assignable to type '"cancelled" | "draft" | "entered-in-error" | "active"'.
+src/lib/services/bpjs-claim-builder.ts(389,37): error TS2551: Property 'value' does not exist on type '{ category: { coding?: { system?: string | undefined; code: string; display?: string | undefined; }[] | undefined; text?: string | undefined; }; amount: { value: number; currency?: string | undefined; }; }[]'. Did you mean 'values'?
+src/lib/services/invoice-builder.ts(295,9): error TS2353: Object literal may only specify known properties, and 'factor' does not exist in type '{ type: "base" | "surcharge" | "deduction" | "discount" | "tax" | "informational"; code?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; amount?: { ...; } | undefined; }'.
+src/lib/services/invoice-builder.ts(317,9): error TS2353: Object literal may only specify known properties, and 'factor' does not exist in type '{ type: "base" | "surcharge" | "deduction" | "discount" | "tax" | "informational"; code?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; amount?: { ...; } | undefined; }'.
+src/lib/services/invoice-pdf-generator.ts(140,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(146,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(169,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(173,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(203,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(208,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(235,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(248,19): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(251,19): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(269,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(287,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(351,21): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(354,21): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(375,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(380,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(413,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(417,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(434,17): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+src/lib/services/invoice-pdf-generator.ts(441,26): error TS7006: Parameter 'line' implicitly has an 'any' type.
+src/lib/services/invoice-pdf-generator.ts(500,25): error TS2339: Property 'description' does not exist on type '{ sequence?: number | undefined; chargeItemReference?: { reference: string; display?: string | undefined; } | undefined; chargeItemCodeableConcept?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; priceCompo...'.
+src/lib/services/invoice-pdf-generator.ts(501,22): error TS2339: Property 'quantity' does not exist on type '{ sequence?: number | undefined; chargeItemReference?: { reference: string; display?: string | undefined; } | undefined; chargeItemCodeableConcept?: { coding?: { system?: string | undefined; code?: string | undefined; display?: string | undefined; }[] | undefined; text?: string | undefined; } | undefined; priceCompo...'.
+src/lib/services/invoice-pdf-generator.ts(507,73): error TS2367: This comparison appears to be unintentional because the types '"base" | "surcharge" | "deduction" | "discount" | "tax" | "informational"' and '"total"' have no overlap.
+src/lib/services/invoice-pdf-generator.ts(512,34): error TS2339: Property 'number' does not exist on type 'FhirInvoice'.
+src/lib/services/invoice-pdf-generator.ts(514,28): error TS2339: Property 'dueDate' does not exist on type 'FhirInvoice'.
+src/lib/services/invoice-pdf-generator.ts(529,29): error TS2339: Property 'currency' does not exist on type 'FhirInvoice'.

@@ -12,6 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AlertCircle } from "lucide-react";
+import { useSatuSehatSync } from "@/lib/hooks/useSatuSehatSync";
+import { SyncStatusIndicator } from "@/components/satusehat/sync-status-indicator";
+import { validatePatientForSync } from "@/lib/api/satusehat/pre-submission-checks";
+import { useToast } from "@/components/ui/use-toast";
 
 interface PatientFormProps {
   action: (formData: FormData) => Promise<any>;
@@ -20,9 +24,18 @@ interface PatientFormProps {
 
 export default function PatientForm({ action, defaultValues }: PatientFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
   const [serverError, setServerError] = useState<string | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [patientId, setPatientId] = useState<string | undefined>();
+
+  const { status: syncStatus, triggerSync } = useSatuSehatSync({
+    patientId,
+    autoSync: true,
+    showToast: true,
+  });
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues,
@@ -47,6 +60,25 @@ export default function PatientForm({ action, defaultValues }: PatientFormProps)
 
   const onSubmit = async (data: PatientFormData) => {
     setServerError(null);
+
+    // Validate for SatuSehat sync
+    const validation = validatePatientForSync({
+      nik: data.nik,
+      name: data.fullName,
+      dateOfBirth: data.dateOfBirth,
+      gender: data.gender,
+    });
+
+    if (!validation.valid) {
+      validation.errors.forEach(error => {
+        toast({
+          description: error,
+          variant: 'destructive',
+        });
+      });
+      return;
+    }
+
     const fd = new FormData();
     fd.append("fullName", data.fullName);
     if (data.nik) fd.append("nik", data.nik);
@@ -74,7 +106,17 @@ export default function PatientForm({ action, defaultValues }: PatientFormProps)
         setServerError(result.error);
       }
     } else if (result?.success) {
-      router.push(`/patients/success?mrNumber=${result.mrNumber}&patientId=${result.patient.id}`);
+      // Set patient ID to trigger auto-sync
+      setPatientId(result.patient.id);
+
+      toast({
+        description: 'Pasien berhasil terdaftar. Sinkronisasi dengan SatuSehat sedang berlangsung...',
+      });
+
+      // Navigate after a short delay to show sync status
+      setTimeout(() => {
+        router.push(`/patients/success?mrNumber=${result.mrNumber}&patientId=${result.patient.id}`);
+      }, 1000);
     }
   };
 
@@ -235,6 +277,39 @@ export default function PatientForm({ action, defaultValues }: PatientFormProps)
           {isSubmitting ? 'Menyimpan...' : 'Simpan'}
         </Button>
       </div>
+
+      {/* SatuSehat Sync Status Display */}
+      {patientId && (
+        <Card className="border-blue-200 bg-blue-50/50">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              Status Sinkronisasi SatuSehat
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <SyncStatusIndicator
+              status={syncStatus}
+              entityType="Pasien"
+              showLabel={true}
+              size="md"
+            />
+            {syncStatus === 'failed' && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => triggerSync(patientId)}
+                className="w-full"
+              >
+                Coba Lagi
+              </Button>
+            )}
+            <p className="text-xs text-gray-600">
+              Sistem sedang sinkronisasi data pasien dengan platform SatuSehat nasional. Proses ini biasanya memakan waktu beberapa detik.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </form>
   );
 }

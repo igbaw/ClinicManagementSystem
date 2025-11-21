@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { LocalizedTime } from "@/components/queue/LocalizedTime";
 
 // Force dynamic rendering and disable caching
 export const dynamic = 'force-dynamic';
@@ -208,7 +209,7 @@ export default async function QueuePage() {
                       <div>
                         <span className="text-gray-500">Check-in:</span>
                         <span className="ml-2 font-medium text-gray-900">
-                          {new Date(entry.check_in_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                          <LocalizedTime isoString={entry.check_in_time} />
                         </span>
                       </div>
                       <div>

@@ -10,7 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import PatientSelector from "@/components/appointments/PatientSelector";
-import DatePicker from "@/components/calendar/DatePicker";
+import { DatePicker } from "@/components/ui/date-picker";
+import { TimeSelect } from "@/components/ui/time-select";
 import { generateTimeSlots, getClinicHoursString } from "@/config/clinic";
 import { Calendar, Clock, FileText, CheckCircle } from "lucide-react";
 
@@ -324,6 +325,7 @@ export default function NewAppointmentPage() {
             <DatePicker
               value={date}
               onChange={(newDate) => {
+                if (!newDate) return;
                 setDate(newDate);
                 setErrors({ ...errors, date: "" });
               }}
@@ -339,29 +341,16 @@ export default function NewAppointmentPage() {
           {/* Time Selection */}
           <div className="space-y-2">
             <Label htmlFor="time">Waktu *</Label>
-            <div className="relative">
-              <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <select
-                id="time"
-                value={time}
-                onChange={(e) => {
-                  setTime(e.target.value);
-                  setErrors({ ...errors, time: "" });
-                }}
-                className="w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-              >
-                <option value="">Pilih Waktu</option>
-                {slots.map((slot) => (
-                  <option
-                    key={slot}
-                    value={slot}
-                    disabled={bookedSlots.has(slot)}
-                  >
-                    {slot} {bookedSlots.has(slot) ? "(Terisi)" : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <TimeSelect
+              value={time}
+              onChange={(value) => {
+                setTime(value);
+                setErrors({ ...errors, time: "" });
+              }}
+              slots={slots}
+              disabledSlots={bookedSlots}
+              placeholder="Pilih Waktu"
+            />
             {errors.time && <p className="text-sm text-destructive mt-1">{errors.time}</p>}
             <p className="text-xs text-muted-foreground">
               Jam operasional: {clinicHoursText}
@@ -428,8 +417,8 @@ export default function NewAppointmentPage() {
                 <div className="space-y-2">
                   <Label htmlFor="rujukan-date">Tanggal Rujukan</Label>
                   <DatePicker
-                    value={rujukanDate || new Date()}
-                    onChange={(date) => setRujukanDate(date)}
+                    value={rujukanDate || undefined}
+                    onChange={(date) => setRujukanDate(date ?? null)}
                     placeholder="Pilih tanggal rujukan"
                     className="w-full"
                   />

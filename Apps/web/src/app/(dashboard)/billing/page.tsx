@@ -174,14 +174,14 @@ export default function BillingPage() {
           <input
             type="text"
             placeholder="Cari nama, MR, atau nomor klaim BPJS..."
-            className="input w-full"
+            className="w-full px-3 py-2 border rounded-md"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div>
           <select
-            className="input"
+            className="px-3 py-2 border rounded-md"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -309,12 +309,6 @@ export default function BillingPage() {
           ))}
         </div>
       )}
-
-      <style jsx global>{`
-        .input {
-          @apply px-3 py-2 border rounded-md;
-        }
-      `}</style>
     </div>
   );
 }
