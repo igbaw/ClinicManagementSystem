@@ -83,17 +83,21 @@ export function SubmissionStatusPopover({
   };
 
   const getStatusBadgeVariant = ():
-    | 'default'
-    | 'secondary'
-    | 'destructive'
-    | 'outline' => {
+    | 'success'
+    | 'error'
+    | 'warning'
+    | 'primary'
+    | 'secondary' => {
     switch (submission.submission_status) {
       case 'success':
-        return 'default';
+        return 'success';
       case 'failed':
-        return 'destructive';
-      case 'processing':
+        return 'error';
       case 'pending':
+        return 'warning';
+      case 'processing':
+        return 'primary';
+      default:
         return 'secondary';
     }
   };

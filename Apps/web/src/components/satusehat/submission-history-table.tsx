@@ -60,7 +60,7 @@ export interface SubmissionHistoryTableProps {
   onPageChange?: (page: number) => void;
 }
 
-type SortField = 'created_at' | 'resource_type' | 'submission_status';
+type SortField = 'created_at' | 'submitted_at' | 'resource_type' | 'submission_status';
 type SortDirection = 'asc' | 'desc';
 
 /**
@@ -167,17 +167,18 @@ export function SubmissionHistoryTable({
 
   const getStatusBadgeVariant = (
     status: string
-  ): 'default' | 'secondary' | 'destructive' | 'outline' => {
+  ): 'success' | 'error' | 'warning' | 'primary' | 'gray' => {
     switch (status) {
       case 'success':
-        return 'default';
+        return 'success';
       case 'failed':
-        return 'destructive';
+        return 'error';
       case 'pending':
+        return 'warning';
       case 'processing':
-        return 'secondary';
+        return 'primary';
       default:
-        return 'outline';
+        return 'gray';
     }
   };
 

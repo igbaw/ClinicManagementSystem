@@ -44,7 +44,6 @@ type Billing = {
     reference_number: string | null;
     notes: string | null;
     payment_date: string;
-    status: string;
   }>;
 };
 
@@ -67,6 +66,14 @@ export default function BillingDetailPage() {
   }, [searchParams]);
 
   const fetchBilling = useCallback(async () => {
+    if (!billingId) {
+      console.error("Error fetching billing: missing billingId from route params", {
+        params,
+      });
+      router.push("/billing");
+      return;
+    }
+
     setLoading(true);
     const { data, error } = await supabase
       .from("billings")
@@ -110,15 +117,19 @@ export default function BillingDetailPage() {
           amount,
           reference_number,
           notes,
-          payment_date,
-          status
+          payment_date
         )
       `)
       .eq("id", billingId)
       .single();
 
     if (error) {
-      console.error("Error fetching billing:", error);
+      console.error("Error fetching billing:", {
+        billingId,
+        message: (error as any)?.message,
+        code: (error as any)?.code,
+        details: error,
+      });
       router.push("/billing");
       return;
     }
@@ -400,11 +411,6 @@ export default function BillingDetailPage() {
                       <p className="text-sm text-gray-600">{payment.notes}</p>
                     )}
                   </div>
-                  {payment.status === "completed" && (
-                    <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
-                      Selesai
-                    </span>
-                  )}
                 </div>
               </div>
             ))}

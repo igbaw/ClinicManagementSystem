@@ -163,11 +163,13 @@ CREATE POLICY satusehat_organization_insert ON satusehat_organization
     auth.jwt() ->> 'role' = 'admin'
   );
 
--- satusehat_encounters: can see own or if admin
+-- satusehat_encounters: can see own (doctor) or if admin
 CREATE POLICY satusehat_encounters_select ON satusehat_encounters
   FOR SELECT USING (
     auth.jwt() ->> 'role' = 'admin' OR
-    appointment_id IN (SELECT id FROM appointments WHERE assigned_to = auth.uid())
+    appointment_id IN (
+      SELECT id FROM appointments WHERE doctor_id = auth.uid()
+    )
   );
 
 -- satusehat_sync_events: admin only

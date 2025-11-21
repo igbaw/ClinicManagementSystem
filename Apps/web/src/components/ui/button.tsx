@@ -14,6 +14,8 @@ const buttonVariants = cva(
           'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 focus:ring-primary-500',
         secondary:
           'bg-white text-primary-600 border border-primary-300 hover:bg-primary-50 hover:border-primary-400 focus:ring-primary-500',
+        outline:
+          'border border-gray-300 text-gray-700 bg-transparent hover:bg-gray-50 focus:ring-gray-400',
         ghost:
           'bg-transparent hover:bg-gray-100 text-gray-700',
         danger:

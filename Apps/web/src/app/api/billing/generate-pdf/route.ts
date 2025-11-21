@@ -96,6 +96,18 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id)
       .single();
 
+    // Normalize patient relation (Supabase may return an array)
+    const patient = Array.isArray(billing.patients)
+      ? billing.patients[0]
+      : billing.patients;
+
+    if (!patient) {
+      return NextResponse.json(
+        { error: 'Patient data unavailable for this billing record' },
+        { status: 422 }
+      );
+    }
+
     // Prepare data for PDF generation
     const invoiceData = {
       invoiceNumber: `INV-${new Date(billing.billing_date).toISOString().split('T')[0].replace(/-/g, '')}-${billing.id.slice(0, 8).toUpperCase()}`,
@@ -105,10 +117,10 @@ export async function POST(request: NextRequest) {
       clinicAddress: clinicConfig.address,
       clinicPhone: clinicConfig.phone,
       clinicEmail: clinicConfig.email,
-      patientName: billing.patients.full_name,
-      patientNik: billing.patients.nik,
-      patientMrn: billing.patients.medical_record_number,
-      patientAddress: billing.patients.address,
+      patientName: patient.full_name,
+      patientNik: patient.nik,
+      patientMrn: patient.medical_record_number,
+      patientAddress: patient.address,
       lineItems: billingItems.map((item: any) => ({
         description: item.description,
         quantity: item.quantity,
@@ -198,7 +210,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Return PDF as response
-    const response = new NextResponse(pdfBuffer);
+    const pdfArrayBuffer = pdfBuffer.buffer.slice(
+      pdfBuffer.byteOffset,
+      pdfBuffer.byteOffset + pdfBuffer.byteLength
+    ) as ArrayBuffer;
+    const response = new NextResponse(pdfArrayBuffer);
     response.headers.set('Content-Type', 'application/pdf');
     response.headers.set('Content-Disposition', `attachment; filename="invoice-${invoiceData.invoiceNumber}.pdf"`);
     response.headers.set('Content-Length', pdfBuffer.length.toString());

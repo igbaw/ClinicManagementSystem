@@ -93,6 +93,7 @@ export default function DatePicker({
           {/* Header */}
           <div className="flex items-center justify-between p-3 border-b border-gray-200">
             <button
+              type="button"
               onClick={handlePrevMonth}
               className="p-1 hover:bg-gray-100 rounded transition-colors"
             >
@@ -106,6 +107,7 @@ export default function DatePicker({
             </h3>
             
             <button
+              type="button"
               onClick={handleNextMonth}
               className="p-1 hover:bg-gray-100 rounded transition-colors"
             >
@@ -134,6 +136,7 @@ export default function DatePicker({
 
                 return (
                   <button
+                    type="button"
                     key={date.toString()}
                     onClick={() => !disabled && handleDateSelect(date)}
                     disabled={disabled}
@@ -156,6 +159,7 @@ export default function DatePicker({
           {/* Footer */}
           <div className="flex items-center justify-between p-3 border-t border-gray-200">
             <button
+              type="button"
               onClick={() => {
                 onChange?.(new Date());
                 setIsOpen(false);
@@ -165,6 +169,7 @@ export default function DatePicker({
               Hari Ini
             </button>
             <button
+              type="button"
               onClick={() => setIsOpen(false)}
               className="text-sm text-gray-600 hover:text-gray-700"
             >

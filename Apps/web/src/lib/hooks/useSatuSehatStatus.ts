@@ -46,7 +46,7 @@ export function useSatuSehatStatus(options: UseSubmissionStatusOptions = {}) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const pollCountRef = useRef(0);
-  const pollIntervalRef = useRef<NodeJS.Timeout>();
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   /**
    * Fetch current submission status

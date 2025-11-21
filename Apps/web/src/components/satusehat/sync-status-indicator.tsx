@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 
 export interface SyncStatusIndicatorProps {
-  status: 'idle' | 'pending' | 'syncing' | 'success' | 'failed' | 'synced';
+  status: 'idle' | 'pending' | 'queued' | 'syncing' | 'success' | 'failed' | 'synced';
   entityType?: string;
   ihsNumber?: string;
   errorMessage?: string;
@@ -60,6 +60,7 @@ export function SyncStatusIndicator({
 
     switch (status) {
       case 'pending':
+      case 'queued':
         return <Clock className={`${sizeMap[size]} text-yellow-600`} />;
       case 'syncing':
         return <Loader2 className={`${sizeMap[size]} text-blue-600 animate-spin`} />;
@@ -76,6 +77,7 @@ export function SyncStatusIndicator({
   const getLabel = () => {
     switch (status) {
       case 'pending':
+      case 'queued':
         return 'Queued';
       case 'syncing':
         return 'Syncing...';
@@ -89,18 +91,20 @@ export function SyncStatusIndicator({
     }
   };
 
-  const getBadgeVariant = (): 'default' | 'secondary' | 'destructive' | 'outline' => {
+  const getBadgeVariant = (): 'success' | 'error' | 'warning' | 'primary' | 'gray' | 'secondary' => {
     switch (status) {
       case 'success':
       case 'synced':
-        return 'default';
+        return 'success';
       case 'failed':
-        return 'destructive';
+        return 'error';
       case 'pending':
+      case 'queued':
+        return 'warning';
       case 'syncing':
-        return 'secondary';
+        return 'primary';
       default:
-        return 'outline';
+        return 'gray';
     }
   };
 

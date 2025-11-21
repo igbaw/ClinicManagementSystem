@@ -36,12 +36,12 @@ export interface FhirPatient {
     use?: string;
   }>;
   contact?: Array<{
-    relationship?: Array<{ coding: Array<{ code: string }> }>;
+    relationship?: Array<{ coding: Array<{ system?: string; code: string; display?: string }> }>;
     name?: { text: string };
     telecom?: Array<{ system: string; value: string }>;
   }>;
   communication?: Array<{
-    language: { coding: Array<{ code: string }> };
+    language: { coding: Array<{ system?: string; code: string; display?: string }> };
     preferred?: boolean;
   }>;
 }
@@ -628,6 +628,751 @@ export interface FhirServiceRequest {
   }>;
 }
 
+// Billing & Financial Resources
+
+export interface FhirInvoice {
+  resourceType: 'Invoice';
+  identifier?: Array<{
+    system?: string;
+    value: string;
+  }>;
+  status: 'draft' | 'issued' | 'balanced' | 'cancelled' | 'entered-in-error';
+  type?: {
+    coding?: Array<{
+      system?: string;
+      code?: string;
+      display?: string;
+    }>;
+    text?: string;
+  };
+  subject: {
+    reference: string; // Patient/xxx
+    display?: string;
+  };
+  recipient?: {
+    reference: string; // Patient or Organization
+    display?: string;
+  };
+  date?: string; // Invoice date (YYYY-MM-DD)
+  participant?: Array<{
+    role?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    actor: {
+      reference: string; // Practitioner/xxx or Organization/xxx
+      display?: string;
+    };
+  }>;
+  issuer?: {
+    reference: string; // Organization/xxx
+    display?: string;
+  };
+  lineItem?: Array<{
+    sequence?: number;
+    chargeItemReference?: {
+      reference: string; // ChargeItem/xxx
+      display?: string;
+    };
+    chargeItemCodeableConcept?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    priceComponent?: Array<{
+      type: 'base' | 'surcharge' | 'deduction' | 'discount' | 'tax' | 'informational';
+      code?: {
+        coding?: Array<{
+          system?: string;
+          code?: string;
+          display?: string;
+        }>;
+        text?: string;
+      };
+      factor?: number;
+      amount?: {
+        value: number;
+        currency?: string;
+      };
+    }>;
+  }>;
+  totalPriceComponent?: Array<{
+    type: 'base' | 'surcharge' | 'deduction' | 'discount' | 'tax' | 'informational';
+    code?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    amount?: {
+      value: number;
+      currency?: string;
+    };
+  }>;
+  totalNet?: {
+    value: number;
+    currency?: string;
+  };
+  totalGross?: {
+    value: number;
+    currency?: string;
+  };
+  paymentTerms?: string;
+  note?: Array<{
+    text: string;
+  }>;
+}
+
+export interface FhirChargeItem {
+  resourceType: 'ChargeItem';
+  identifier?: Array<{
+    system?: string;
+    value: string;
+  }>;
+  status: 'planned' | 'billable' | 'not-billable' | 'aborted' | 'billed' | 'entered-in-error' | 'unknown';
+  code: {
+    coding?: Array<{
+      system?: string;
+      code: string;
+      display?: string;
+    }>;
+    text?: string;
+  };
+  subject: {
+    reference: string; // Patient/xxx
+    display?: string;
+  };
+  context?: {
+    reference: string; // Encounter/xxx
+    display?: string;
+  };
+  occurrenceDateTime?: string;
+  occurrencePeriod?: {
+    start?: string;
+    end?: string;
+  };
+  performer?: Array<{
+    function?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    actor: {
+      reference: string; // Practitioner/xxx or Organization/xxx
+      display?: string;
+    };
+  }>;
+  performingOrganization?: {
+    reference: string; // Organization/xxx
+    display?: string;
+  };
+  quantity?: {
+    value: number;
+    comparator?: string;
+    unit?: string;
+    system?: string;
+    code?: string;
+  };
+  priceOverride?: {
+    value: number;
+    currency?: string;
+  };
+  factorOverride?: number;
+  note?: Array<{
+    text: string;
+  }>;
+}
+
+export interface FhirClaim {
+  resourceType: 'Claim';
+  identifier?: Array<{
+    system?: string;
+    value: string;
+  }>;
+  status: 'active' | 'cancelled' | 'draft' | 'entered-in-error';
+  type: {
+    coding?: Array<{
+      system?: string;
+      code: string;
+      display?: string;
+    }>;
+    text?: string;
+  };
+  use: 'claim' | 'preauthorization' | 'predetermination';
+  patient: {
+    reference: string; // Patient/xxx
+    display?: string;
+  };
+  billablePeriod?: {
+    start?: string;
+    end?: string;
+  };
+  created: string; // DateTime
+  insurer: {
+    reference: string; // Organization/xxx (BPJS)
+    display?: string;
+  };
+  provider: {
+    reference: string; // Organization/xxx (Your clinic)
+    display?: string;
+  };
+  priority: {
+    coding?: Array<{
+      system?: string;
+      code: 'normal' | 'urgent';
+      display?: string;
+    }>;
+  };
+  supportingInfo?: Array<{
+    sequence: number;
+    category: {
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    code?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    timing?: {
+      date?: string;
+      period?: {
+        start?: string;
+        end?: string;
+      };
+    };
+    valueBoolean?: boolean;
+    valueString?: string;
+    valueQuantity?: {
+      value: number;
+      unit?: string;
+    };
+    valueAttachment?: {
+      contentType?: string;
+      url?: string;
+      title?: string;
+    };
+    valueReference?: {
+      reference: string;
+      display?: string;
+    };
+    valueIdentifier?: {
+      system?: string;
+      value: string;
+    };
+  }>;
+  diagnosis?: Array<{
+    sequence: number;
+    diagnosisCodeableConcept?: {
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    diagnosisReference?: {
+      reference: string;
+      display?: string;
+    };
+    type?: Array<{
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    }>;
+    onAdmission?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+    };
+  }>;
+  insurance: Array<{
+    sequence: number;
+    focal: boolean;
+    coverage: {
+      reference: string; // Coverage/xxx
+      display?: string;
+    };
+    businessArrangement?: string;
+    preAuthRef?: string[];
+  }>;
+  item?: Array<{
+    sequence: number;
+    careTeamSequence?: number[];
+    diagnosisSequence?: number[];
+    procedureSequence?: number[];
+    informationSequence?: number[];
+    category?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    productOrService: {
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    modifier?: Array<{
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    }>;
+    programCode?: Array<{
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    }>;
+    servicedDate?: string;
+    servicedPeriod?: {
+      start?: string;
+      end?: string;
+    };
+    locationCodeableConcept?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    quantity?: {
+      value: number;
+      comparator?: string;
+      unit?: string;
+      system?: string;
+      code?: string;
+    };
+    unitPrice?: {
+      value: number;
+      currency?: string;
+    };
+    factor?: number;
+    net?: {
+      value: number;
+      currency?: string;
+    };
+    udi?: Array<{
+      reference: string;
+    }>;
+    bodySite?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    subSite?: Array<{
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    }>;
+    encounter?: Array<{
+      reference: string;
+    }>;
+    detail?: Array<{
+      sequence: number;
+      category?: {
+        coding?: Array<{
+          system?: string;
+          code?: string;
+          display?: string;
+        }>;
+        text?: string;
+      };
+      productOrService: {
+        coding?: Array<{
+          system?: string;
+          code: string;
+          display?: string;
+        }>;
+        text?: string;
+      };
+      modifier?: Array<{
+        coding?: Array<{
+          system?: string;
+          code?: string;
+          display?: string;
+        }>;
+        text?: string;
+      }>;
+      quantity?: {
+        value: number;
+      };
+      unitPrice?: {
+        value: number;
+        currency?: string;
+      };
+      factor?: number;
+      net?: {
+        value: number;
+        currency?: string;
+      };
+      udi?: Array<{
+        reference: string;
+      }>;
+      subDetail?: Array<{
+        sequence: number;
+        category?: {
+          coding?: Array<{
+            system?: string;
+            code?: string;
+            display?: string;
+          }>;
+          text?: string;
+        };
+        productOrService: {
+          coding?: Array<{
+            system?: string;
+            code: string;
+            display?: string;
+          }>;
+          text?: string;
+        };
+        modifier?: Array<{
+          coding?: Array<{
+            system?: string;
+            code?: string;
+            display?: string;
+          }>;
+          text?: string;
+        }>;
+        quantity?: {
+          value: number;
+        };
+        unitPrice?: {
+          value: number;
+          currency?: string;
+        };
+        factor?: number;
+        net?: {
+          value: number;
+          currency?: string;
+        };
+        udi?: Array<{
+          reference: string;
+        }>;
+      }>;
+    }>;
+  }>;
+  total?: Array<{
+    category: {
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    amount: {
+      value: number;
+      currency?: string;
+    };
+  }>;
+}
+
+export interface FhirClaimResponse {
+  resourceType: 'ClaimResponse';
+  identifier?: Array<{
+    system?: string;
+    value: string;
+  }>;
+  status: 'active' | 'cancelled' | 'draft' | 'entered-in-error';
+  type: {
+    coding?: Array<{
+      system?: string;
+      code: string;
+      display?: string;
+    }>;
+    text?: string;
+  };
+  use: 'claim' | 'preauthorization' | 'predetermination';
+  patient: {
+    reference: string;
+    display?: string;
+  };
+  created: string; // DateTime
+  insurer: {
+    reference: string;
+    display?: string;
+  };
+  requestor?: {
+    reference: string;
+    display?: string;
+  };
+  request: {
+    reference: string; // Claim/xxx
+    display?: string;
+  };
+  outcome: 'queued' | 'complete' | 'error' | 'partial';
+  disposition?: string;
+  preAuthRef?: string[];
+  processNote?: Array<{
+    type?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    text?: string;
+  }>;
+  item?: Array<{
+    itemSequence: number;
+    noteNumber?: number[];
+    adjudication: Array<{
+      category: {
+        coding?: Array<{
+          system?: string;
+          code: string;
+          display?: string;
+        }>;
+        text?: string;
+      };
+      reason?: {
+        coding?: Array<{
+          system?: string;
+          code?: string;
+          display?: string;
+        }>;
+        text?: string;
+      };
+      amount?: {
+        value: number;
+        currency?: string;
+      };
+    }>;
+    detail?: Array<{
+      detailSequence: number;
+      noteNumber?: number[];
+      adjudication: Array<{
+        category: {
+          coding?: Array<{
+            system?: string;
+            code: string;
+            display?: string;
+          }>;
+          text?: string;
+        };
+        amount?: {
+          value: number;
+          currency?: string;
+        };
+      }>;
+      subDetail?: Array<{
+        subDetailSequence: number;
+        noteNumber?: number[];
+        adjudication: Array<{
+          category: {
+            coding?: Array<{
+              system?: string;
+              code: string;
+              display?: string;
+            }>;
+            text?: string;
+          };
+          amount?: {
+            value: number;
+            currency?: string;
+          };
+        }>;
+      }>;
+    }>;
+  }>;
+  addItem?: Array<{
+    itemSequence?: number[];
+    detailSequence?: number[];
+    subdetailSequence?: number[];
+    productOrService: {
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    modifier?: Array<{
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    }>;
+    programCode?: Array<{
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    }>;
+    servicedDate?: string;
+    servicedPeriod?: {
+      start?: string;
+      end?: string;
+    };
+    locationCodeableConcept?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    quantity?: {
+      value: number;
+    };
+    unitPrice?: {
+      value: number;
+      currency?: string;
+    };
+    factor?: number;
+    net?: {
+      value: number;
+      currency?: string;
+    };
+    bodySite?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    subSite?: Array<{
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    }>;
+    noteNumber?: number[];
+    adjudication: Array<{
+      category: {
+        coding?: Array<{
+          system?: string;
+          code: string;
+          display?: string;
+        }>;
+        text?: string;
+      };
+      amount?: {
+        value: number;
+        currency?: string;
+      };
+    }>;
+  }>;
+  total?: Array<{
+    category: {
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    amount: {
+      value: number;
+      currency?: string;
+    };
+  }>;
+  payment?: {
+    type: {
+      coding?: Array<{
+        system?: string;
+        code: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    adjustment?: {
+      value: number;
+      currency?: string;
+    };
+    adjustmentReason?: {
+      coding?: Array<{
+        system?: string;
+        code?: string;
+        display?: string;
+      }>;
+      text?: string;
+    };
+    date?: string;
+    amount: {
+      value: number;
+      currency?: string;
+    };
+  };
+  fundsReserve?: {
+    coding?: Array<{
+      system?: string;
+      code?: string;
+      display?: string;
+    }>;
+    text?: string;
+  };
+  formCode?: {
+    coding?: Array<{
+      system?: string;
+      code?: string;
+      display?: string;
+    }>;
+    text?: string;
+  };
+  form?: {
+    contentType?: string;
+    language?: string;
+    data?: string;
+    url?: string;
+  };
+  communicationRequest?: Array<{
+    reference: string;
+    display?: string;
+  }>;
+}
+
 export class SatuSehatClient {
   private clientId: string;
   private clientSecret: string;
@@ -668,11 +1413,11 @@ export class SatuSehatClient {
     return this.accessToken!;
   }
 
-  private async makeRequest(
+  private async makeRequest<T = unknown>(
     method: string,
     endpoint: string,
-    body?: Record<string, unknown>
-  ): Promise<unknown> {
+    body?: unknown
+  ): Promise<T> {
     const token = await this.getAccessToken();
     const url = `${this.baseURL}/fhir-r4/v1${endpoint}`;
 
@@ -691,13 +1436,41 @@ export class SatuSehatClient {
     const res = await fetch(url, options);
 
     if (!res.ok) {
-      const errorBody = await res.text();
-      throw new Error(
-        `SatuSehat API error: ${res.status} ${res.statusText} - ${errorBody}`
-      );
+      let errorMessage = `SatuSehat API error: ${res.status} ${res.statusText}`;
+
+      try {
+        const errorBody = await res.text();
+
+        // Try to parse as JSON to check for OperationOutcome
+        try {
+          const errorJson = JSON.parse(errorBody);
+
+          // Check if it's an OperationOutcome
+          if (errorJson.resourceType === 'OperationOutcome' && errorJson.issue?.length > 0) {
+            // Extract the first issue's diagnostics or details
+            const issue = errorJson.issue[0];
+            const details = issue.diagnostics || issue.details?.text || issue.code;
+            errorMessage = `SatuSehat Error: ${details} (${res.status})`;
+          } else if (errorJson.message) {
+            // Handle standard JSON error message
+            errorMessage = `SatuSehat Error: ${errorJson.message} (${res.status})`;
+          } else {
+            // Fallback to raw body if JSON but not structured as expected
+            errorMessage = `SatuSehat API error: ${res.status} ${res.statusText} - ${errorBody.substring(0, 200)}`;
+          }
+        } catch (e) {
+          // Not JSON, append raw text (truncated if too long)
+          errorMessage = `SatuSehat API error: ${res.status} ${res.statusText} - ${errorBody.substring(0, 200)}`;
+        }
+      } catch (e) {
+        // Failed to read body
+        console.error('Failed to read error body', e);
+      }
+
+      throw new Error(errorMessage);
     }
 
-    return res.json();
+    return res.json() as Promise<T>;
   }
 
   // Organization Management
@@ -817,5 +1590,46 @@ export class SatuSehatClient {
     serviceRequest: FhirServiceRequest
   ): Promise<Record<string, unknown>> {
     return this.makeRequest('PUT', `/ServiceRequest/${serviceRequestId}`, serviceRequest);
+  }
+
+  // Invoice Management (Billing)
+  async createInvoice(invoice: FhirInvoice): Promise<Record<string, unknown>> {
+    return this.makeRequest('POST', '/Invoice', invoice);
+  }
+
+  async updateInvoice(
+    invoiceId: string,
+    invoice: FhirInvoice
+  ): Promise<Record<string, unknown>> {
+    return this.makeRequest('PUT', `/Invoice/${invoiceId}`, invoice);
+  }
+
+  async getInvoice(invoiceId: string): Promise<Record<string, unknown>> {
+    return this.makeRequest('GET', `/Invoice/${invoiceId}`);
+  }
+
+  // ChargeItem Management (Cost Items)
+  async createChargeItem(chargeItem: FhirChargeItem): Promise<Record<string, unknown>> {
+    return this.makeRequest('POST', '/ChargeItem', chargeItem);
+  }
+
+  async updateChargeItem(
+    chargeItemId: string,
+    chargeItem: FhirChargeItem
+  ): Promise<Record<string, unknown>> {
+    return this.makeRequest('PUT', `/ChargeItem/${chargeItemId}`, chargeItem);
+  }
+
+  // Claim Management (BPJS Claims - Foundation for future use)
+  async createClaim(claim: FhirClaim): Promise<Record<string, unknown>> {
+    return this.makeRequest('POST', '/Claim', claim);
+  }
+
+  async getClaim(claimId: string): Promise<Record<string, unknown>> {
+    return this.makeRequest('GET', `/Claim/${claimId}`);
+  }
+
+  async getClaimResponse(claimResponseId: string): Promise<Record<string, unknown>> {
+    return this.makeRequest('GET', `/ClaimResponse/${claimResponseId}`);
   }
 }

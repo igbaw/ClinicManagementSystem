@@ -68,20 +68,33 @@ export class SatuSehatQueueService {
         return result;
       }
 
-      // Process each queue item
-      for (const queueItem of queueItems) {
+      // Process queue items in parallel
+      const promises = queueItems.map(async (queueItem) => {
         try {
           await this.processQueueItem(queueItem);
-          result.succeeded++;
+          return { success: true, id: queueItem.id };
         } catch (error) {
-          result.failed++;
           const errorMsg = error instanceof Error ? error.message : String(error);
-          result.errors.push({
-            queueId: queueItem.id,
-            error: errorMsg,
-          });
+          return { success: false, id: queueItem.id, error: errorMsg };
         }
+      });
+
+      const results = await Promise.all(promises);
+
+      // Aggregate results
+      for (const res of results) {
         result.processed++;
+        if (res.success) {
+          result.succeeded++;
+        } else {
+          result.failed++;
+          if (res.error) {
+            result.errors.push({
+              queueId: res.id,
+              error: res.error,
+            });
+          }
+        }
       }
 
       return result;
@@ -140,7 +153,7 @@ export class SatuSehatQueueService {
           .eq('id', queueItem.id);
 
         // Log sync event
-        await this.logSyncEvent('sync_success', submission.resource_type, result.resourceId, {
+        await this.logSyncEvent('sync_success', submission.resource_type, result.resourceId || '', {
           correlation_id: correlationId,
           attempts: queueItem.attempt_count + 1,
         });
@@ -208,7 +221,7 @@ export class SatuSehatQueueService {
       }
 
       // Extract resource ID from response
-      const resourceId = (response.id || response.entry?.[0]?.resource?.id) as string;
+      const resourceId = (response.id || (response as any).entry?.[0]?.resource?.id) as string;
 
       return {
         success: true,

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import DatePicker from "@/components/calendar/DatePicker";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useSatuSehatClinicalSubmit } from "@/lib/hooks/useSatuSehatClinicalSubmit";
 import { ClinicalDataStatusSection } from "@/components/satusehat/clinical-data-status-section";
 import { checkPrerequisites, validateMedicalRecordForSubmission } from "@/lib/api/satusehat/pre-submission-checks";
@@ -15,6 +15,7 @@ interface Patient {
   full_name: string;
   date_of_birth: string;
   gender: string;
+  ihs_number?: string | null;
 }
 
 interface Diagnosis {
@@ -249,7 +250,7 @@ export default function NewMedicalRecordPage() {
 
     // Check prerequisites for SatuSehat submission
     const { canSubmit, missing } = checkPrerequisites({
-      patientIhsNumber: patient?.ihs_number,
+      patientIhsNumber: patient?.ihs_number ?? undefined,
       doctorId: currentUser?.id,
       organizationId: clinic?.satusehat_organization_id,
     });
@@ -665,7 +666,7 @@ export default function NewMedicalRecordPage() {
           </label>
           <DatePicker
             value={followUpDate}
-            onChange={(date) => setFollowUpDate(date)}
+            onChange={(date) => setFollowUpDate(date ?? undefined)}
             minDate={new Date()}
             placeholder="Pilih tanggal kontrol"
             className="w-full"

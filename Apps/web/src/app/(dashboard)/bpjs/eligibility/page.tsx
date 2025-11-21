@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { Search, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import DatePicker from '@/components/calendar/DatePicker';
+import { DatePicker } from '@/components/ui/date-picker';
 
 interface EligibilityResult {
   eligible: boolean;
@@ -111,7 +111,10 @@ export default function BPJSEligibilityPage() {
             </label>
             <DatePicker
               value={serviceDate}
-              onChange={(date) => setServiceDate(date)}
+              onChange={(date) => {
+                if (!date) return;
+                setServiceDate(date);
+              }}
               placeholder="Pilih tanggal pelayanan"
               className="w-full"
             />

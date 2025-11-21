@@ -43,7 +43,7 @@ export function useSatuSehatSync(options: UseSatuSehatSyncOptions = {}) {
   });
 
   const [isPolling, setIsPolling] = useState(false);
-  const pollIntervalRef = useRef<NodeJS.Timeout>();
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
   const toastShownRef = useRef<Set<string>>(new Set());
 
@@ -142,7 +142,7 @@ export function useSatuSehatSync(options: UseSatuSehatSyncOptions = {}) {
       }
 
       const data = await response.json();
-      const submission = data.data?.[0];
+      const submission = data.data?.find((s: any) => s.id === submissionId);
 
       if (!submission) {
         return;
@@ -185,14 +185,18 @@ export function useSatuSehatSync(options: UseSatuSehatSyncOptions = {}) {
               title: 'Sync Failed',
               description: newStatus.error,
               variant: 'destructive',
-              action: {
-                label: 'Retry',
-                onClick: () => triggerSync(),
-              },
+              action: (
+                <div
+                  onClick={() => triggerSync()}
+                  className="cursor-pointer font-medium hover:underline"
+                >
+                  Retry
+                </div>
+              ),
             });
           }
           if (onError) {
-            onError(newStatus.error);
+            onError(newStatus.error || 'Sync failed');
           }
           setIsPolling(false);
           break;

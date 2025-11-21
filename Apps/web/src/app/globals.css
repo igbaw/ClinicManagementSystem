@@ -187,6 +187,11 @@
   }
 }
 
+/* React DayPicker Dropdown Support */
+.rdp-vhidden {
+  @apply hidden;
+}
+
 h1 {
   @apply text-3xl font-bold text-gray-900 tracking-tight;
 }

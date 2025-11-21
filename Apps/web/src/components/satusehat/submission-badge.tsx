@@ -113,7 +113,7 @@ export function SubmissionBadge({
         <TooltipTrigger asChild>
           <div className="inline-flex items-center gap-2">
             <Badge
-              variant="outline"
+              variant="gray"
               className={`${getStatusColor()} inline-flex items-center gap-1.5 px-3 py-1`}
             >
               {getStatusIcon()}

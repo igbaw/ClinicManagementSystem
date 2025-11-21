@@ -125,14 +125,19 @@ export function SubmissionStatusSection({
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, any> = {
-      pending: 'secondary',
-      processing: 'secondary',
-      success: 'default',
-      failed: 'destructive',
-    };
-    return variants[status] || 'outline';
+  const getStatusBadge = (status: string): 'success' | 'error' | 'warning' | 'primary' | 'gray' => {
+    switch (status) {
+      case 'pending':
+        return 'warning';
+      case 'processing':
+        return 'primary';
+      case 'success':
+        return 'success';
+      case 'failed':
+        return 'error';
+      default:
+        return 'gray';
+    }
   };
 
   return (
@@ -211,14 +216,14 @@ export function SubmissionStatusSection({
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {getStatusIcon(submission.submission_status)}
-                      <Badge variant={getStatusBadge(submission.submission_status) as any}>
+                      <Badge variant={getStatusBadge(submission.submission_status)}>
                         {submission.submission_status === 'pending'
                           ? 'Pending'
                           : submission.submission_status === 'processing'
-                          ? 'Processing'
-                          : submission.submission_status === 'success'
-                          ? 'Success'
-                          : 'Failed'}
+                            ? 'Processing'
+                            : submission.submission_status === 'success'
+                              ? 'Success'
+                              : 'Failed'}
                       </Badge>
                     </div>
                   </TableCell>

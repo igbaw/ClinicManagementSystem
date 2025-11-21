@@ -5,7 +5,7 @@
 
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
-import { buildFhirCondition, buildFhirObservation } from './builders';
+import { buildFhirCondition, buildFhirObservation } from '../builders';
 import { SubmissionStatus, ResourceType } from '@/lib/api/satusehat/types';
 
 export const runtime = 'nodejs';

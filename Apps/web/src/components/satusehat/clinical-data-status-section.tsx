@@ -74,14 +74,19 @@ export function ClinicalDataStatusSection({
     }
   };
 
-  const getStatusBadge = (itemStatus: string) => {
-    const variants: Record<string, any> = {
-      submitting: 'secondary',
-      success: 'default',
-      failed: 'destructive',
-      idle: 'secondary',
-    };
-    return variants[itemStatus] || 'outline';
+  const getStatusBadge = (itemStatus: string): 'success' | 'error' | 'warning' | 'primary' | 'gray' | 'secondary' => {
+    switch (itemStatus) {
+      case 'submitting':
+        return 'primary';
+      case 'success':
+        return 'success';
+      case 'failed':
+        return 'error';
+      case 'idle':
+        return 'secondary';
+      default:
+        return 'gray';
+    }
   };
 
   const getStatusText = (itemStatus: string) => {
@@ -136,17 +141,15 @@ export function ClinicalDataStatusSection({
 
       <CardContent className="space-y-6">
         {/* Progress Bar */}
-        {status.status !== 'idle' && (
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Overall Progress</span>
-              <span className="font-semibold">
-                {completedItems}/{totalItems} items
-              </span>
-            </div>
-            <Progress value={progressPercentage} className="h-2" />
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600">Overall Progress</span>
+            <span className="font-semibold">
+              {completedItems}/{totalItems} items
+            </span>
           </div>
-        )}
+          <Progress value={progressPercentage} className="h-2" />
+        </div>
 
         {/* Encounter Section */}
         <div className="space-y-3">

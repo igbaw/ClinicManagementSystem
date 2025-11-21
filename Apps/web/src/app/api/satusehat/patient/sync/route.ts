@@ -6,7 +6,7 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { SatuSehatClient } from '@/lib/api/satusehat/client';
-import { buildFhirPatient } from './builder';
+import { buildFhirPatient } from '../builder';
 import { isValidNIK } from '@/lib/api/satusehat/utils';
 import { SubmissionStatus, ResourceType } from '@/lib/api/satusehat/types';
 

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import DatePicker from "@/components/calendar/DatePicker";
+import { DatePicker } from "@/components/ui/date-picker";
 import Link from "next/link";
 
 interface Patient {
@@ -76,7 +76,17 @@ export default function EditPatientPage() {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const updateData = {
+
+      const emergencyContactName = (formData.get("emergency_contact_name") || "").toString().trim();
+      const emergencyContactRelationship = (formData.get("emergency_contact_relationship") || "").toString().trim();
+      const emergencyContactPhone = (formData.get("emergency_contact_phone") || "").toString().trim();
+
+      const hasEmergencyContact =
+        emergencyContactName !== "" ||
+        emergencyContactRelationship !== "" ||
+        emergencyContactPhone !== "";
+
+      const updateData: any = {
         full_name: formData.get("full_name"),
         nik: formData.get("nik"),
         bpjs_number: formData.get("bpjs_number") || null,
@@ -85,10 +95,18 @@ export default function EditPatientPage() {
         phone: formData.get("phone"),
         email: formData.get("email") || null,
         address: formData.get("address"),
-        emergency_contact_name: formData.get("emergency_contact_name") || null,
-        emergency_contact_relationship: formData.get("emergency_contact_relationship") || null,
-        emergency_contact_phone: formData.get("emergency_contact_phone") || null,
       };
+
+      // Persist emergency contact into the existing JSONB column
+      if (hasEmergencyContact) {
+        updateData.emergency_contact = {
+          name: emergencyContactName || null,
+          relationship: emergencyContactRelationship || null,
+          phone: emergencyContactPhone || null,
+        };
+      } else {
+        updateData.emergency_contact = null;
+      }
 
       const { error } = await supabase
         .from("patients")
@@ -201,7 +219,7 @@ export default function EditPatientPage() {
               </label>
               <DatePicker
                 value={dateOfBirth || new Date(patient.date_of_birth)}
-                onChange={(date) => setDateOfBirth(date)}
+                onChange={(date) => setDateOfBirth(date ?? dateOfBirth)}
                 placeholder="Pilih tanggal lahir"
                 className="w-full"
               />
